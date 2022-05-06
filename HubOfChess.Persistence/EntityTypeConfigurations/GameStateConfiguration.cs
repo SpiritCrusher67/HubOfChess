@@ -9,8 +9,8 @@ namespace HubOfChess.Persistence.EntityTypeConfigurations
         public void Configure(EntityTypeBuilder<GameState> builder)
         {
             builder.HasKey(g => g.Id);
-            builder.HasMany(g => g.Users).WithMany("GameUsers");
-            builder.HasOne(g => g.WinnerUser).WithMany("UserGameWins");
+            builder.HasMany(g => g.Users).WithMany(u => u.GamesPlayed);
+            builder.HasOne(g => g.WinnerUser).WithMany(u => u.WinningGames);
         }
     }
 }
