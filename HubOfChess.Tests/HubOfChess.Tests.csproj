@@ -25,5 +25,8 @@
     <ProjectReference Include="..\HubOfChess.Application\HubOfChess.Application.csproj" />
     <ProjectReference Include="..\HubOfChess.Persistence\HubOfChess.Persistence.csproj" />
   </ItemGroup>
+	<ItemGroup>
+		<Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
 
 </Project>
