@@ -8,13 +8,14 @@ namespace HubOfChess.Tests.Common
 {
     public static class AppDbContextFactory
     {
-        public static readonly User UserA = new() { UserId = Guid.NewGuid(), FirstName = "User", LastName = "A" };
-        public static readonly User UserB = new() { UserId = Guid.NewGuid(), FirstName = "User", LastName = "B" };
-        public static readonly User UserC = new() { UserId = Guid.NewGuid(), FirstName = "User", LastName = "C" };
+        public static readonly User UserA = new() { UserId = Guid.NewGuid(), FirstName = "UserA", LastName = "A" };
+        public static readonly User UserB = new() { UserId = Guid.NewGuid(), FirstName = "UserB", LastName = "B" };
+        public static readonly User UserC = new() { UserId = Guid.NewGuid(), FirstName = "UserC", LastName = "C" };
 
         public static readonly Chat ChatA = new() { Id = Guid.NewGuid(), Users = new List<User> { UserA, UserB }, Owner = UserA };
         public static readonly Chat ChatB = new() { Id = Guid.NewGuid(), Users = new List<User> { UserA, UserC }, Owner = UserC };
-        public static readonly Chat ChatC = new() { Id = Guid.NewGuid(), Users = new List<User> { UserA, UserB, UserC }, Owner = UserA, Name = "TestChat" };
+        public static readonly Chat ChatC = new() { Id = Guid.NewGuid(), Users = new List<User> { UserA, UserB, UserC }, Owner = UserA, Name = "TestChat C" };
+        public static readonly Chat ChatD = new() { Id = Guid.NewGuid(), Users = new List<User> { UserA }, Owner = UserA, Name = "TestChat D" };
 
         public static readonly Message MessageA = new()
         {
@@ -44,6 +45,13 @@ namespace HubOfChess.Tests.Common
             Sender = UserB,
             Text = "Test msg D"
         };
+        public static readonly Message MessageF = new()
+        {
+            Id = Guid.Parse("7B301DDA-DEBA-433B-AE11-13380142B0BF"),
+            Chat = ChatD,
+            Sender = UserB,
+            Text = "Test msg F"
+        };
 
         public static AppDbContext Create()
         {
@@ -54,7 +62,7 @@ namespace HubOfChess.Tests.Common
             var context = new AppDbContext(options);
             context.Database.EnsureCreated();
             context.Users.AddRange(UserA, UserB, UserC);
-            context.Chats.AddRange(ChatA, ChatB, ChatC);
+            context.Chats.AddRange(ChatA, ChatB, ChatC,ChatD);
             context.Messages.AddRange(
                 MessageA, MessageB, MessageC,MessageD
             );
