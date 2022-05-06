@@ -17,7 +17,7 @@ namespace HubOfChess.Persistence.EntityTypeConfigurations
     {
         public void Configure(EntityTypeBuilder<PostLike> builder)
         {
-            builder.HasKey(l => new { l.Post, l.User });
+            builder.HasKey(l => new { l.PostId, l.UserId });
             builder.HasOne(l => l.Post).WithMany(u => u.Likes);
             builder.HasOne(l => l.User).WithMany(p => p.PostLikes);
         }
