@@ -10,7 +10,7 @@ namespace HubOfChess.Persistence.EntityTypeConfigurations
         {
             builder.HasKey(c => c.Id);
             builder.HasIndex(c => c.Id);
-            builder.HasMany(c => c.Users).WithMany("Chats");
+            builder.HasMany(c => c.Users).WithMany(u => u.Chats);
         }
     }
 }
