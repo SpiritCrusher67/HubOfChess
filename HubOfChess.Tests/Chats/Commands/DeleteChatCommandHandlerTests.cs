@@ -12,6 +12,7 @@ namespace HubOfChess.Tests.Chats.Commands
 {
     public class DeleteChatCommandHandlerTests : TestCommandBase
     {
+        [Fact]
         public async Task DeleteChatCommand_Success()
         {
             //Arrage
@@ -28,6 +29,8 @@ namespace HubOfChess.Tests.Chats.Commands
             //Assert
             Assert.Null(await DbContext.Chats.FirstOrDefaultAsync(c => c.Id == chatId));
         }
+
+        [Fact]
         public async Task DeleteChatCommand_WrongChatId()
         {
             //Arrage
@@ -43,6 +46,8 @@ namespace HubOfChess.Tests.Chats.Commands
                  CancellationToken.None));
 
         }
+
+        [Fact]
         public async Task DeleteChatCommand_WrongUser()
         {
             //Arrage
