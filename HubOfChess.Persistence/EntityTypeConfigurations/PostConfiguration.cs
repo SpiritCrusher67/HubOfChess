@@ -9,7 +9,7 @@ namespace HubOfChess.Persistence.EntityTypeConfigurations
         public void Configure(EntityTypeBuilder<Post> builder)
         {
             builder.HasKey(p => p.Id);
-            builder.HasOne(p => p.Author).WithMany("Posts");
+            builder.HasOne(p => p.Author).WithMany(u => u.Posts);
 
         }
     }
@@ -18,8 +18,8 @@ namespace HubOfChess.Persistence.EntityTypeConfigurations
         public void Configure(EntityTypeBuilder<PostLike> builder)
         {
             builder.HasKey(l => new { l.Post, l.User });
-            builder.HasOne(l => l.Post).WithMany("Likes");
-            builder.HasOne(l => l.User).WithMany("PostsLikes");
+            builder.HasOne(l => l.Post).WithMany(u => u.Likes);
+            builder.HasOne(l => l.User).WithMany(p => p.PostLikes);
         }
     }
     public class PostCommentConfiguration : IEntityTypeConfiguration<PostComment>
@@ -28,8 +28,8 @@ namespace HubOfChess.Persistence.EntityTypeConfigurations
         {
 
             builder.HasKey(c => c.Id);
-            builder.HasOne(c => c.Post).WithMany("Comments");
-            builder.HasOne(c => c.User).WithMany("PostsComments");
+            builder.HasOne(c => c.Post).WithMany(p => p.Comments);
+            builder.HasOne(c => c.User).WithMany(u => u.PostComments);
         }
     }
 }
