@@ -22,35 +22,40 @@ namespace HubOfChess.Tests.Common
             Id = Guid.Parse("DA0EF73A-BB52-4E44-B24F-F241418FFA59"),
             Chat = ChatA,
             Sender = UserA,
-            Text = "Test msg A"
+            Text = "Test msg A",
+            Date = DateTime.Parse("09/03/2022 03:21:48")
         };
         public static readonly Message MessageB = new()
         {
             Id = Guid.Parse("112E2AD7-A9EE-4E6A-8FCC-A532A5EE846C"),
             Chat = ChatA,
             Sender = UserB,
-            Text = "Test msg B"
+            Text = "Test msg B",
+            Date = DateTime.Parse("10/03/2022 03:21:48")
         };
         public static readonly Message MessageC = new()
         {
             Id = Guid.Parse("3BB8D12F-C17A-42EB-B945-315559BB65E0"),
-            Chat = ChatC,
+            Chat = ChatA,
             Sender = UserA,
-            Text = "Test msg C"
+            Text = "Test msg C",
+            Date = DateTime.Parse("11/03/2022 03:21:48")
         };
         public static readonly Message MessageD = new()
         {
             Id = Guid.Parse("7B301DDA-DEBA-433B-AE11-13380142B0BF"),
-            Chat = ChatC,
+            Chat = ChatA,
             Sender = UserB,
-            Text = "Test msg D"
+            Text = "Test msg D",
+            Date = DateTime.Parse("12/03/2022 03:21:48")
         };
-        public static readonly Message MessageF = new()
+        public static readonly Message MessageE = new()
         {
-            Id = Guid.Parse("7B301DDA-DEBA-433B-AE11-13380142B0BF"),
-            Chat = ChatD,
+            Id = Guid.Parse("8778DCE5-19B0-4C36-A71C-FB91802DBCAB"),
+            Chat = ChatA,
             Sender = UserB,
-            Text = "Test msg F"
+            Text = "Test msg F",
+            Date = DateTime.Parse("12/03/2022 03:21:50")
         };
 
         public static AppDbContext Create()
@@ -64,7 +69,7 @@ namespace HubOfChess.Tests.Common
             context.Users.AddRange(UserA, UserB, UserC);
             context.Chats.AddRange(ChatA, ChatB, ChatC,ChatD);
             context.Messages.AddRange(
-                MessageA, MessageB, MessageC,MessageD
+                MessageA, MessageB, MessageC, MessageD, MessageE
             );
 
             context.SaveChanges();

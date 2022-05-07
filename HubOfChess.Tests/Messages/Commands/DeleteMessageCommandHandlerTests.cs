@@ -16,7 +16,7 @@ namespace HubOfChess.Tests.Messages.Commands
         {
             //Arrange
             var userId = AppDbContextFactory.UserB.UserId;
-            var msgId = AppDbContextFactory.MessageF.Id;
+            var msgId = AppDbContextFactory.MessageE.Id;
             var handler = new DeleteMessageCommandHandler(DbContext);
 
             //Act
