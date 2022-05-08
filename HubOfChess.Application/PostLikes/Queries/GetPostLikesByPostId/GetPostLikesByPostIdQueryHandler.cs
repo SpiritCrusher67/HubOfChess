@@ -18,7 +18,7 @@ namespace HubOfChess.Application.PostLikes.Queries.GetPostLikesByPostId
         {
             var likesList = await _dbContext.PostLikes
                 .Where(l => l.PostId == request.PostId)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return _mapper.Map <IEnumerable<PostLikeVM>>(likesList);
         }

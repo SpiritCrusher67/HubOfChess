@@ -17,7 +17,7 @@ namespace HubOfChess.Application.PostLikes.Commands.DeletePostLike
         {
             var like = await _dbContext.PostLikes
                 .FirstOrDefaultAsync(l => l.UserId == request.UserId && 
-                    l.PostId == request.PostId);
+                    l.PostId == request.PostId, cancellationToken);
             if (like == null)
                 throw new NotFoundException(nameof(PostLike), new { request.PostId, request.UserId });
 

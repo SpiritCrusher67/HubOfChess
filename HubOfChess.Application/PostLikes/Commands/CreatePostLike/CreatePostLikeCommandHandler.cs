@@ -16,10 +16,10 @@ namespace HubOfChess.Application.PostLikes.Commands.CreatePostLike
         public async Task<Unit> Handle(CreatePostLikeCommand request, CancellationToken cancellationToken)
         {
             var user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.UserId == request.UserId);
+                .FirstOrDefaultAsync(u => u.UserId == request.UserId, cancellationToken);
             var post = await _dbContext.Posts
                 .Include(p => p.Likes)
-                .FirstOrDefaultAsync(p => p.Id == request.PostId);
+                .FirstOrDefaultAsync(p => p.Id == request.PostId, cancellationToken);
 
             if (user == null)
                 throw new NotFoundException(nameof(User), request.UserId);
@@ -43,7 +43,7 @@ namespace HubOfChess.Application.PostLikes.Commands.CreatePostLike
                 Date = DateTime.Now
             };
 
-            await _dbContext.PostLikes.AddAsync(like);
+            await _dbContext.PostLikes.AddAsync(like, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;
