@@ -16,11 +16,11 @@ namespace HubOfChess.Application.PostComments.Commands.DeletePostComment
         public async Task<Unit> Handle(DeletePostCommentCommand request, CancellationToken cancellationToken)
         {
             var user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.UserId == request.UserId);
+                .FirstOrDefaultAsync(u => u.UserId == request.UserId, cancellationToken);
             if (user == null)
                 throw new NotFoundException(nameof(User), request.UserId);
             var comment = await _dbContext.PostComments
-                .FirstOrDefaultAsync(c => c.Id == request.CommentId);
+                .FirstOrDefaultAsync(c => c.Id == request.CommentId, cancellationToken);
             if (comment == null)
                 throw new NotFoundException(nameof(PostComment), request.CommentId);
             if (comment.User != user)

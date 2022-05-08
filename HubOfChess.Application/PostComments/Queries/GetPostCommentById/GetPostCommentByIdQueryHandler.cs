@@ -19,7 +19,7 @@ namespace HubOfChess.Application.PostComments.Queries.GetPostCommentById
         public async Task<PostCommentVM> Handle(GetPostCommentByIdQuery request, CancellationToken cancellationToken)
         {
             var comment = await _dbContext.PostComments
-                .FirstOrDefaultAsync(c => c.Id == request.CommentId);
+                .FirstOrDefaultAsync(c => c.Id == request.CommentId, cancellationToken);
             if (comment == null)
                 throw new NotFoundException(nameof(PostComment), request.CommentId);
 

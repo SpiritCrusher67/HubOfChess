@@ -20,7 +20,7 @@ namespace HubOfChess.Application.PostComments.Queries.GetPostCommentsByPostId
         {
             var post = await _dbContext.Posts
                 .Include(p => p.Comments)
-                .FirstOrDefaultAsync(p => p.Id == request.PostId);
+                .FirstOrDefaultAsync(p => p.Id == request.PostId, cancellationToken);
             if (post == null)
                 throw new NotFoundException(nameof(Post), request.PostId);
 
