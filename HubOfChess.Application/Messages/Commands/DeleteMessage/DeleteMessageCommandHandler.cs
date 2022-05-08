@@ -16,9 +16,9 @@ namespace HubOfChess.Application.Messages.Commands.DeleteMessage
         public async Task<Unit> Handle(DeleteMessageCommand request, CancellationToken cancellationToken)
         {
             var message = await _dbContext.Messages
-                .FirstOrDefaultAsync(m => m.Id == request.MessageId);
+                .FirstOrDefaultAsync(m => m.Id == request.MessageId, cancellationToken);
             var user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.UserId == request.UserId);
+                .FirstOrDefaultAsync(u => u.UserId == request.UserId, cancellationToken);
 
             if (message == null)
                 throw new NotFoundException(nameof(Message), request.MessageId);
