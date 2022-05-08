@@ -38,9 +38,6 @@ namespace HubOfChess.Tests.PostLikes.Queries
             //Arrange
             var postId = AppDbContextFactory.PostB.Id;
             var handler = new GetPostLikesByPostIdQueryHandler(DbContext, Mapper);
-            var expectedList = Mapper.Map<IEnumerable<PostLikeVM>>(new[] {
-                AppDbContextFactory.PostLikeA,
-                AppDbContextFactory.PostLikeB });
 
             //Act
             var result = await handler.Handle(
