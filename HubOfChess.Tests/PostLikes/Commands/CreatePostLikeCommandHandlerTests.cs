@@ -15,7 +15,7 @@ namespace HubOfChess.Tests.PostLikes.Commands
         public async Task CreatePostLikeCommand_Success()
         {
             //Arrange
-            var userId = AppDbContextFactory.UserA.UserId;
+            var userId = AppDbContextFactory.UserC.UserId;
             var postId = AppDbContextFactory.PostC.Id;
             var handler = new CreatePostLikeCommandHandler(DbContext);
 
