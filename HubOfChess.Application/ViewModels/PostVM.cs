@@ -31,9 +31,9 @@ namespace HubOfChess.Application.ViewModels
                 .ForMember(vm => vm.Date,
                     opt => opt.MapFrom(post => post.Date))
                 .ForMember(vm => vm.LikesCount,
-                    opt => opt.MapFrom(post => post.Likes.Count()))
+                    opt => opt.MapFrom(post => post.Likes.Count))
                 .ForMember(vm => vm.CommentsCount,
-                    opt => opt.MapFrom(post => post.Comments.Count()));
+                    opt => opt.MapFrom(post => post.Comments.Count));
         }
     }
 }

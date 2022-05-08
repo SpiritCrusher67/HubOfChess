@@ -7,13 +7,13 @@ namespace HubOfChess.Persistence
 {
     public sealed class AppDbContext : DbContext, IAppDbContext
     {
-        public DbSet<User> Users { get; set; }
-        public DbSet<Chat> Chats { get; set; }
-        public DbSet<Message> Messages { get; set; }
-        public DbSet<Post> Posts { get; set; }
-        public DbSet<PostLike> PostLikes { get; set; }
-        public DbSet<PostComment> PostComments { get; set; }
-        public DbSet<GameState> GameStates { get; set; }
+        public DbSet<User> Users { get; set; } = null!;
+        public DbSet<Chat> Chats { get; set; } = null!;
+        public DbSet<Message> Messages { get; set; } = null!;
+        public DbSet<Post> Posts { get; set; } = null!;
+        public DbSet<PostLike> PostLikes { get; set; } = null!;
+        public DbSet<PostComment> PostComments { get; set; } = null!;
+        public DbSet<GameState> GameStates { get; set; } = null!;
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options) { }
