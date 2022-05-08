@@ -16,7 +16,7 @@ namespace HubOfChess.Application.Chats.Commands.CreateChat
         public async Task<Guid> Handle(CreateChatCommand request, CancellationToken cancellationToken)
         {
             var user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.UserId == request.ChatOwner);
+                .FirstOrDefaultAsync(u => u.UserId == request.ChatOwner, cancellationToken);
             if (user == null)
                 throw new NotFoundException(nameof(User), request.ChatOwner);
 
