@@ -4,7 +4,7 @@ using HubOfChess.Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace HubOfChess.Application.PostLikes.Commands
+namespace HubOfChess.Application.PostLikes.Commands.CreatePostLike
 {
     public class CreatePostLikeCommandHandler : IRequestHandler<CreatePostLikeCommand>
     {
