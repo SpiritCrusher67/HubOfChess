@@ -120,19 +120,20 @@ namespace HubOfChess.Tests.Common
         {
             Post = PostA,
             User = UserB,
-            Date = DateTime.Now
+            Date = DateTime.Parse("14/03/2022 03:21:48")
         };
         public static readonly PostLike PostLikeB = new()
         {
             Post = PostA,
             User = UserC,
-            Date = DateTime.Now
+            Date = DateTime.Parse("12/03/2022 04:12:32")
         };
         public static readonly PostLike PostLikeC = new()
         {
             Post = PostF,
             User = UserC,
-            Date = DateTime.Now
+            Date = DateTime.Parse("19/03/2022 05:32:12")
+
         };
         #endregion
 
