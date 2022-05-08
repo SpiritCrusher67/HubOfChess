@@ -16,7 +16,7 @@ namespace HubOfChess.Application.Chats.Commands.DeleteChat
         public async Task<Unit> Handle(DeleteChatCommand request, CancellationToken cancellationToken)
         {
             var chat = await _dbContext.Chats
-                .FirstOrDefaultAsync(c => c.Id == request.ChatId);
+                .FirstOrDefaultAsync(c => c.Id == request.ChatId, cancellationToken);
 
             if (chat == null)
                 throw new NotFoundException(nameof(Chat), request.ChatId);
