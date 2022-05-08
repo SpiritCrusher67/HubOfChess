@@ -18,12 +18,12 @@ namespace HubOfChess.Tests.Chats.Commands
             //Arrage
             var createHandler = new CreateChatCommandHandler(DbContext);
             var deleteHandler = new DeleteChatCommandHandler(DbContext);
-            var user = AppDbContextFactory.UserA;
-            var chatId = await createHandler.Handle(new CreateChatCommand(user), CancellationToken.None);
+            var userId = AppDbContextFactory.UserA.UserId;
+            var chatId = await createHandler.Handle(new CreateChatCommand(userId), CancellationToken.None);
 
             //Act
             await deleteHandler.Handle(
-                new DeleteChatCommand(chatId, user.UserId), 
+                new DeleteChatCommand(chatId, userId), 
                 CancellationToken.None);
 
             //Assert
@@ -31,7 +31,7 @@ namespace HubOfChess.Tests.Chats.Commands
         }
 
         [Fact]
-        public async Task DeleteChatCommand_WrongChatId()
+        public async Task DeleteChatCommand_FailOnWrongChatId()
         {
             //Arrage
             var deleteHandler = new DeleteChatCommandHandler(DbContext);
@@ -48,18 +48,18 @@ namespace HubOfChess.Tests.Chats.Commands
         }
 
         [Fact]
-        public async Task DeleteChatCommand_WrongUser()
+        public async Task DeleteChatCommand_FailOnWrongUser()
         {
             //Arrage
             var createHandler = new CreateChatCommandHandler(DbContext);
             var deleteHandler = new DeleteChatCommandHandler(DbContext);
-            var ownerUser = AppDbContextFactory.UserA;
+            var ownerUserId = AppDbContextFactory.UserA.UserId;
             var wrongUser = AppDbContextFactory.UserB;
-            var chatId = await createHandler.Handle(new CreateChatCommand(ownerUser), CancellationToken.None);
+            var chatId = await createHandler.Handle(new CreateChatCommand(ownerUserId), CancellationToken.None);
 
             //Act
             //Assert
-            await Assert.ThrowsAsync<NotFoundException>(() =>
+            await Assert.ThrowsAsync<NoPermissionException>(() =>
              deleteHandler.Handle(
                  new DeleteChatCommand(chatId, wrongUser.UserId),
                  CancellationToken.None));
