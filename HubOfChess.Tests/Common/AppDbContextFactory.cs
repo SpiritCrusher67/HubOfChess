@@ -70,42 +70,48 @@ namespace HubOfChess.Tests.Common
             Id = Guid.Parse("A2DA86A2-6FCE-4E4E-8D67-6DA5B24C58C8"),
             Author = UserA,
             Title = "T Post A",
-            Text = "Test post A"
+            Text = "Test post A",
+            Date = DateTime.Parse("09/04/2022 03:21:48")
         };
         public static readonly Post PostB = new()
         {
             Id = Guid.Parse("AFBDD960-AD89-4CB4-B251-8E1A9E322F8D"),
             Author = UserA,
             Title = "T Post B",
-            Text = "Test post B"
+            Text = "Test post B",
+            Date = DateTime.Parse("10/04/2022 03:21:48")
         };
         public static readonly Post PostC = new()
         {
             Id = Guid.Parse("93393D7F-9670-4A3B-B2A3-804B22481F7F"),
             Author = UserA,
             Title = "T Post C",
-            Text = "Test post C"
+            Text = "Test post C",
+            Date = DateTime.Parse("11/04/2022 03:21:48")
         };
         public static readonly Post PostD = new()
         {
             Id = Guid.Parse("3BB02E1E-F50F-418A-B7FC-E07DE007FC88"),
             Author = UserA,
             Title = "T Post D",
-            Text = "Test post D"
+            Text = "Test post D",
+            Date = DateTime.Parse("12/04/2022 03:21:30")
         };
         public static readonly Post PostE = new()
         {
             Id = Guid.Parse("8747A0D0-DF67-4CE4-AAF7-4B8F6FC09A61"),
             Author = UserA,
             Title = "T Post E",
-            Text = "Test post E"
+            Text = "Test post E",
+            Date = DateTime.Parse("12/04/2022 03:21:48")
         };
         public static readonly Post PostF = new()
         {
             Id = Guid.Parse("8B7D291C-2B10-4A11-A11F-F7C66D26E020"),
             Author = UserB,
             Title = "T Post F",
-            Text = "Test post F"
+            Text = "Test post F",
+            Date = DateTime.Parse("09/04/2022 03:21:48")
         };
         #endregion
 
