@@ -30,7 +30,7 @@ namespace HubOfChess.Tests.Chats.Queries
         }
 
         [Fact]
-        public async Task GetChatByIdQueryTest_FailNotExistingChat()
+        public async Task GetChatByIdQueryTest_FailOnNotExistingChat()
         {
             //Arrange
             var userId = AppDbContextFactory.UserA.UserId;
@@ -46,7 +46,7 @@ namespace HubOfChess.Tests.Chats.Queries
         }
 
         [Fact]
-        public async Task GetChatByIdQueryTest_FailNotExistingUser()
+        public async Task GetChatByIdQueryTest_FailOnNotExistingUser()
         {
             //Arrange
             var userId = Guid.NewGuid();

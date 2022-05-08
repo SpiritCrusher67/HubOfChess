@@ -34,7 +34,7 @@ namespace HubOfChess.Tests.Chats.Commands
         }
 
         [Fact]
-        public async Task UpdateChatCommand_WrongNewOwnerUser()
+        public async Task UpdateChatCommand_FailOnWrongNewOwnerUser()
         {
             //Arrange
             var userId = AppDbContextFactory.UserC.UserId;
@@ -54,7 +54,7 @@ namespace HubOfChess.Tests.Chats.Commands
         }
 
         [Fact]
-        public async Task UpdateChatCommand_WrongUser()
+        public async Task UpdateChatCommand_FailOnWrongUser()
         {
             //Arrange
             var userId = AppDbContextFactory.UserC.UserId;
@@ -72,7 +72,7 @@ namespace HubOfChess.Tests.Chats.Commands
         }
 
         [Fact]
-        public async Task UpdateChatCommand_NoExistUser()
+        public async Task UpdateChatCommand_FailOnNotExistingUser()
         {
             //Arrange
             var userId = Guid.NewGuid();
@@ -90,7 +90,7 @@ namespace HubOfChess.Tests.Chats.Commands
         }
 
         [Fact]
-        public async Task UpdateChatCommand_NoExistChat()
+        public async Task UpdateChatCommand_FailOnNoExistingChat()
         {
             //Arrange
             var userId = AppDbContextFactory.UserC.UserId;

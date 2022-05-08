@@ -73,7 +73,7 @@ namespace HubOfChess.Tests.Chats.Commands
         }
 
         [Fact]
-        public async Task LeaveChatCommand_WrongChat()
+        public async Task LeaveChatCommand_FailOnWrongChat()
         {
             //Arrange
             var userId = AppDbContextFactory.UserA.UserId;
@@ -89,7 +89,7 @@ namespace HubOfChess.Tests.Chats.Commands
         }
 
         [Fact]
-        public async Task LeaveChatCommand_NotExistingUser()
+        public async Task LeaveChatCommand_FailOnNotExistingUser()
         {
             //Arrange
             var userId = Guid.NewGuid();
@@ -105,7 +105,7 @@ namespace HubOfChess.Tests.Chats.Commands
         }
 
         [Fact]
-        public async Task LeaveChatCommand_WrongUser()
+        public async Task LeaveChatCommand_FailOnWrongUser()
         {
             //Arrange
             var userId = AppDbContextFactory.UserB.UserId;
