@@ -18,8 +18,12 @@ namespace HubOfChess.Application.Chats.Commands.DeleteChat
             var chat = await _dbContext.Chats
                 .FirstOrDefaultAsync(c => c.Id == request.ChatId);
 
-            if (chat == null || chat.Owner?.UserId != request.UserId)
+            if (chat == null)
                 throw new NotFoundException(nameof(Chat), request.ChatId);
+            if (chat.Owner?.UserId != request.UserId)
+                throw new NoPermissionException(
+                    nameof(User), request.UserId, 
+                    nameof(Chat), request.ChatId);
 
             _dbContext.Chats.Remove(chat);
             await _dbContext.SaveChangesAsync(cancellationToken);
