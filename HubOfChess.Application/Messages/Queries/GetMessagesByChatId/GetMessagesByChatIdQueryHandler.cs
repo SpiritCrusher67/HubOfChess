@@ -19,9 +19,9 @@ namespace HubOfChess.Application.Messages.Queries.GetMessagesByChatId
         public async Task<IEnumerable<MessageVM>> Handle(GetMessagesByChatIdQuery request, CancellationToken cancellationToken)
         {
             var chat = await _dbContext.Chats
-                .FirstOrDefaultAsync(c => c.Id == request.ChatId);
+                .FirstOrDefaultAsync(c => c.Id == request.ChatId, cancellationToken);
             var user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.UserId == request.UserId);
+                .FirstOrDefaultAsync(u => u.UserId == request.UserId, cancellationToken);
 
             if (chat == null)
                 throw new NotFoundException(nameof(Chat), request.ChatId);
