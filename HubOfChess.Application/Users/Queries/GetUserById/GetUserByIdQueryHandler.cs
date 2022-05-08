@@ -19,7 +19,7 @@ namespace HubOfChess.Application.Users.Queries.GetUserById
         public async Task<UserVM> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
             var user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.UserId == request.UserId);
+                .FirstOrDefaultAsync(u => u.UserId == request.UserId, cancellationToken);
             if (user == null)
                 throw new NotFoundException(nameof(User), request.UserId);
 

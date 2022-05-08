@@ -15,9 +15,9 @@ namespace HubOfChess.Application.Messages.Commands.CreateMessage
         public async Task<Guid> Handle(CreateMessageCommand request, CancellationToken cancellationToken)
         {
             var chat = await _dbContext.Chats
-                .FirstOrDefaultAsync(c => c.Id == request.ChatId);
+                .FirstOrDefaultAsync(c => c.Id == request.ChatId, cancellationToken);
             var user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.UserId == request.UserId);
+                .FirstOrDefaultAsync(u => u.UserId == request.UserId,cancellationToken);
 
             if (chat == null)
                 throw new NotFoundException(nameof(Chat), request.ChatId);
@@ -37,7 +37,7 @@ namespace HubOfChess.Application.Messages.Commands.CreateMessage
                 Date = DateTime.Now,
             };
 
-            await _dbContext.Messages.AddAsync(message);
+            await _dbContext.Messages.AddAsync(message, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return message.Id;

@@ -16,7 +16,7 @@ namespace HubOfChess.Application.Posts.Commands.CreatePost
         public async Task<Guid> Handle(CreatePostCommand request, CancellationToken cancellationToken)
         {
             var user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.UserId == request.UserId);
+                .FirstOrDefaultAsync(u => u.UserId == request.UserId, cancellationToken);
 
             if (user == null)
                 throw new NotFoundException(nameof(User), request.UserId);
@@ -30,7 +30,7 @@ namespace HubOfChess.Application.Posts.Commands.CreatePost
                 Date = DateTime.Now
             };
 
-            await _dbContext.Posts.AddAsync(post);
+            await _dbContext.Posts.AddAsync(post, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return post.Id;

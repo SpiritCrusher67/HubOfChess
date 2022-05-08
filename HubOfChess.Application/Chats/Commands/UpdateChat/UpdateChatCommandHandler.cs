@@ -16,11 +16,11 @@ namespace HubOfChess.Application.Chats.Commands.UpdateChat
         public async Task<Unit> Handle(UpdateChatCommand request, CancellationToken cancellationToken)
         {
             var chat = await _dbContext.Chats
-                .FirstOrDefaultAsync(c => c.Id == request.ChatId);
+                .FirstOrDefaultAsync(c => c.Id == request.ChatId, cancellationToken);
             var user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.UserId == request.UserId);
+                .FirstOrDefaultAsync(u => u.UserId == request.UserId, cancellationToken);
             var ownerUser = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.UserId == request.ChatOwnerId);
+                .FirstOrDefaultAsync(u => u.UserId == request.ChatOwnerId, cancellationToken);
 
             if (chat == null)
                 throw new NotFoundException(nameof(Chat), request.ChatId);
@@ -32,7 +32,7 @@ namespace HubOfChess.Application.Chats.Commands.UpdateChat
                     nameof(Chat), chat.Id);
 
             chat.Name = request.ChatName;
-            if (chat.Users.Contains(ownerUser))
+            if (ownerUser != null && chat.Users.Contains(ownerUser))
                 chat.Owner = ownerUser;
 
             await _dbContext.SaveChangesAsync(cancellationToken);

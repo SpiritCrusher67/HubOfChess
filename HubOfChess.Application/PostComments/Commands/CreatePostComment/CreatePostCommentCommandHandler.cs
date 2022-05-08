@@ -16,9 +16,9 @@ namespace HubOfChess.Application.PostComments.Commands.CreatePostComment
         public async Task<Guid> Handle(CreatePostCommentCommand request, CancellationToken cancellationToken)
         {
             var post = await _dbContext.Posts
-                .FirstOrDefaultAsync(p => p.Id == request.PostId);
+                .FirstOrDefaultAsync(p => p.Id == request.PostId, cancellationToken);
             var user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.UserId == request.UserId);
+                .FirstOrDefaultAsync(u => u.UserId == request.UserId, cancellationToken);
 
             if (post == null)
                 throw new NotFoundException(nameof(Post), request.PostId);
@@ -34,7 +34,7 @@ namespace HubOfChess.Application.PostComments.Commands.CreatePostComment
                 Date = DateTime.Now
             };
 
-            await _dbContext.PostComments.AddAsync(comment);
+            await _dbContext.PostComments.AddAsync(comment, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return comment.Id;
