@@ -1,6 +1,8 @@
 ﻿using HubOfChess.Domain;
 using HubOfChess.Application.Interfaces;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using HubOfChess.Application.Common.Exceptions;
 
 namespace HubOfChess.Application.Chats.Commands.CreateChat
 {
@@ -13,11 +15,16 @@ namespace HubOfChess.Application.Chats.Commands.CreateChat
 
         public async Task<Guid> Handle(CreateChatCommand request, CancellationToken cancellationToken)
         {
+            var user = await _dbContext.Users
+                .FirstOrDefaultAsync(u => u.UserId == request.ChatOwner);
+            if (user == null)
+                throw new NotFoundException(nameof(User), request.ChatOwner);
+
             var chat = new Chat
             {
                 Id = Guid.NewGuid(),
                 Name = request.ChatName,
-                Owner = request.ChatOwner
+                Owner = user
             };
 
             await _dbContext.Chats.AddAsync(chat,cancellationToken);
