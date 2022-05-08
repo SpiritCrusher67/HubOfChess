@@ -16,9 +16,9 @@ namespace HubOfChess.Application.Posts.Commands.DeletePost
         public async Task<Unit> Handle(DeletePostCommand request, CancellationToken cancellationToken)
         {
             var user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.UserId == request.UserId);
+                .FirstOrDefaultAsync(u => u.UserId == request.UserId, cancellationToken);
             var post = await _dbContext.Posts
-                .FirstOrDefaultAsync(p => p.Id == request.PostId);
+                .FirstOrDefaultAsync(p => p.Id == request.PostId, cancellationToken);
 
             if (user == null)
                 throw new NotFoundException(nameof(User), request.UserId);
