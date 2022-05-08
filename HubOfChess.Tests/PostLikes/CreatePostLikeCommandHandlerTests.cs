@@ -1,15 +1,11 @@
 ﻿using FluentAssertions;
-using HubOfChess.Application.PostLikes.Commands;
 using HubOfChess.Tests.Common;
 using HubOfChess.Application.Common.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using HubOfChess.Application.PostLikes.Commands.CreatePostLike;
 
 namespace HubOfChess.Tests.PostLikes
 {
