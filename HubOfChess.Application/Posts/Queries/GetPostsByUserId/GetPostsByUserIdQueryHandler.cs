@@ -25,7 +25,7 @@ namespace HubOfChess.Application.Posts.Queries.GetPostsByUserId
 
             var posts = user.Posts
                 .OrderByDescending(p => p.Date)
-                .Skip(request.Page * request.PageLimit)
+                .Skip((request.Page - 1) * request.PageLimit)
                 .Take(request.PageLimit);
 
             return _mapper.Map<IEnumerable<PostVM>>(posts);
