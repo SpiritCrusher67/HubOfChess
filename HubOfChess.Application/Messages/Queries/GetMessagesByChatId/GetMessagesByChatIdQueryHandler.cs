@@ -34,7 +34,7 @@ namespace HubOfChess.Application.Messages.Queries.GetMessagesByChatId
 
             var messages = chat.Messages
                 .OrderByDescending(m => m.Date)
-                .Skip(request.Page * request.PageLimit )
+                .Skip((request.Page - 1) * request.PageLimit )
                 .Take(request.PageLimit);
 
             return _mapper.Map<IEnumerable<MessageVM>>(messages);
