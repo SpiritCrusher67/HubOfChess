@@ -7,7 +7,8 @@ namespace HubOfChess.Application.Common.Handlers
 {
     public class AppGetEntityQueryHandler : 
         IGetEntityQueryHandler<User>,
-        IGetEntityQueryHandler<Chat>
+        IGetEntityQueryHandler<Chat>,
+        IGetEntityQueryHandler<Message>
     {
 
         private readonly IAppDbContext dbContext;
@@ -31,6 +32,15 @@ namespace HubOfChess.Application.Common.Handlers
             if (chat == null)
                 throw new NotFoundException(nameof(Chat), id);
             return chat;
+        }
+
+        async Task<Message> IGetEntityQueryHandler<Message>.GetEntityByIdAsync(Guid id, CancellationToken cancellationToken)
+        {
+            var msg = await dbContext.Messages
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (msg == null)
+                throw new NotFoundException(nameof(Message), id);
+            return msg;
         }
     }
 }
