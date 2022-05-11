@@ -17,6 +17,10 @@
         public ICollection<PostComment> PostComments { get; set; } = null!;
         public ICollection<GameState> GamesPlayed { get; set; } = null!;
         public ICollection<GameState> WinningGames { get; set; } = null!;
+        public ICollection<ChatInvite> SendedChatInvites { get; set; } = null!;
+        public ICollection<ChatInvite> ChatInvites { get; set; } = null!;
+        public ICollection<FriendInvite> SendedFriendInvites { get; set; } = null!;
+        public ICollection<FriendInvite> FriendInvites { get; set; } = null!;
 
     }
 }
