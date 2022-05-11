@@ -1,25 +1,24 @@
-﻿using HubOfChess.Application.Common.Exceptions;
-using HubOfChess.Application.Interfaces;
+﻿using HubOfChess.Application.Interfaces;
 using HubOfChess.Domain;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace HubOfChess.Application.Posts.Commands.CreatePost
 {
     public class CreatePostCommandHandler : IRequestHandler<CreatePostCommand, Guid>
     {
-        private readonly IAppDbContext _dbContext;
+        private readonly IAppDbContext dbContext;
+        private readonly IGetEntityQueryHandler<User> getUserHandler;
 
-        public CreatePostCommandHandler(IAppDbContext dbContext) =>
-            _dbContext = dbContext;
+        public CreatePostCommandHandler(IAppDbContext dbContext, IGetEntityQueryHandler<User> getUserHandler)
+        {
+            this.dbContext = dbContext;
+            this.getUserHandler = getUserHandler;
+        }
 
         public async Task<Guid> Handle(CreatePostCommand request, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.UserId == request.UserId, cancellationToken);
-
-            if (user == null)
-                throw new NotFoundException(nameof(User), request.UserId);
+            var user = await getUserHandler
+                .GetEntityByIdAsync(request.UserId, cancellationToken);
 
             var post = new Post
             {
@@ -30,8 +29,8 @@ namespace HubOfChess.Application.Posts.Commands.CreatePost
                 Date = DateTime.Now
             };
 
-            await _dbContext.Posts.AddAsync(post, cancellationToken);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await dbContext.Posts.AddAsync(post, cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
 
             return post.Id;
         }
