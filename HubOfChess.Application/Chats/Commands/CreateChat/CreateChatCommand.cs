@@ -2,5 +2,5 @@
 
 namespace HubOfChess.Application.Chats.Commands.CreateChat
 {
-    public record CreateChatCommand(Guid ChatOwner, string? ChatName = null) : IRequest<Guid>;
+    public record CreateChatCommand(Guid ChatOwnerUserId, string? ChatName = null) : IRequest<Guid>;
 }
