@@ -15,7 +15,7 @@ namespace HubOfChess.Tests.Chats.Commands
             //Arrange
             var userId = AppDbContextFactory.UserA.UserId;
             var name = "84466A55";
-            var handler = new CreateChatCommandHandler(DbContext);
+            var handler = new CreateChatCommandHandler(DbContext, QueryHandler);
 
             //Act
             var chatId = await handler.Handle(new CreateChatCommand(userId, name), CancellationToken.None);
