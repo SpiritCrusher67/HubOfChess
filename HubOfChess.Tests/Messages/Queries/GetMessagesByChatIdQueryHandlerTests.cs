@@ -20,7 +20,9 @@ namespace HubOfChess.Tests.Messages.Queries
             var userId = AppDbContextFactory.UserA.UserId;
             var chatId = AppDbContextFactory.ChatA.Id;
             (var page, var limit) = (1, 3);
+
             var handler = new GetMessagesByChatIdQueryHandler(QueryHandler, QueryHandler, Mapper);
+
             var expectedMsgList = Mapper.Map<IEnumerable<MessageVM>>(new List<Message>
             {
                 AppDbContextFactory.MessageE,
@@ -47,6 +49,7 @@ namespace HubOfChess.Tests.Messages.Queries
             var chatId = AppDbContextFactory.ChatA.Id;
             (var page, var limit) = (2, 3);
             var handler = new GetMessagesByChatIdQueryHandler(QueryHandler, QueryHandler, Mapper);
+            
             var expectedMsgList = Mapper.Map<IEnumerable<MessageVM>>(new List<Message>
             {
                 AppDbContextFactory.MessageB,
