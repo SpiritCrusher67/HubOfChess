@@ -1,9 +1,7 @@
 ﻿using FluentAssertions;
-using HubOfChess.Application.Common.Exceptions;
 using HubOfChess.Application.PostComments.Queries.GetPostCommentById;
 using HubOfChess.Application.ViewModels;
 using HubOfChess.Tests.Common;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -17,7 +15,7 @@ namespace HubOfChess.Tests.PostComments.Queries
         {
             //Arrange
             var commentId = AppDbContextFactory.PostCommentA.Id;
-            var handler = new GetPostCommentByIdQueryHandler(DbContext, Mapper);
+            var handler = new GetPostCommentByIdQueryHandler(QueryHandler, Mapper);
             var expectedComment = Mapper.Map<PostCommentVM>(AppDbContextFactory.PostCommentA);
 
             //Act
@@ -32,22 +30,6 @@ namespace HubOfChess.Tests.PostComments.Queries
             comment.UserFullName.Should().Be(expectedComment.UserFullName);
             comment.Text.Should().Be(expectedComment.Text);
             comment.Date.Should().Be(expectedComment.Date);
-        }
-
-        [Fact]
-        public async Task GetPostCommentByIdQuery_FailOnNotExistPostComment()
-        {
-            //Arrange
-            var commentId = Guid.NewGuid();
-            var handler = new GetPostCommentByIdQueryHandler(DbContext, Mapper);
-            var expectedComment = Mapper.Map<PostCommentVM>(AppDbContextFactory.PostCommentA);
-
-            //Act
-            //Assert
-            await Assert.ThrowsAsync<NotFoundException>( () =>
-                handler.Handle(
-                    new GetPostCommentByIdQuery(commentId),
-                    CancellationToken.None));
         }
     }
 }
