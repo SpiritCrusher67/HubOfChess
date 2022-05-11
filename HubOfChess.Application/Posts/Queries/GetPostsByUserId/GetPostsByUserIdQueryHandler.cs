@@ -18,6 +18,7 @@ namespace HubOfChess.Application.Posts.Queries.GetPostsByUserId
         public async Task<IEnumerable<PostVM>> Handle(GetPostsByUserIdQuery request, CancellationToken cancellationToken)
         {
             var user = await _dbContext.Users
+                .Include(u => u.Posts)
                 .FirstOrDefaultAsync(u => u.UserId == request.UserId, cancellationToken);
 
             if (user == null)
