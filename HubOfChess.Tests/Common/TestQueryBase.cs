@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HubOfChess.Application.Common.Handlers;
 using HubOfChess.Application.Common.Mappings;
 using HubOfChess.Application.Interfaces;
 using HubOfChess.Persistence;
@@ -10,6 +11,7 @@ namespace HubOfChess.Tests.Common
     {
         protected readonly AppDbContext DbContext;
         protected readonly IMapper Mapper;
+        protected readonly AppGetEntityQueryHandler QueryHandler;
 
         public TestQueryBase()
         {
@@ -20,6 +22,7 @@ namespace HubOfChess.Tests.Common
                     typeof(IAppDbContext).Assembly));
             });
             Mapper = confugurationProvider.CreateMapper();
+            QueryHandler = new(DbContext);
         }
 
         public void Dispose()

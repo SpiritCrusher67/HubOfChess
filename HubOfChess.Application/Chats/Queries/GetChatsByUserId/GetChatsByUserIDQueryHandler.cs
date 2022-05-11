@@ -1,27 +1,27 @@
-﻿using HubOfChess.Domain;
+﻿using MediatR;
+using AutoMapper;
+using HubOfChess.Domain;
 using HubOfChess.Application.Interfaces;
-using HubOfChess.Application.Common.Exceptions;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
+using HubOfChess.Application.ViewModels;
 
 namespace HubOfChess.Application.Chats.Queries.GetChatsByUserId
 {
-    public class GetChatsByUserIdQueryHandler : IRequestHandler<GetChatsByUserIdQuery, IEnumerable<Chat>>
+    public class GetChatsByUserIdQueryHandler : IRequestHandler<GetChatsByUserIdQuery, IEnumerable<ChatVM>>
     {
-        private readonly IAppDbContext _dbContext;
+        private readonly IGetEntityQueryHandler<User> getUserHandler;
+        private readonly IMapper mapper;
 
-        public GetChatsByUserIdQueryHandler(IAppDbContext dbContext) =>
-            _dbContext = dbContext;
-
-        public async Task<IEnumerable<Chat>> Handle(GetChatsByUserIdQuery request, CancellationToken cancellationToken)
+        public GetChatsByUserIdQueryHandler(IGetEntityQueryHandler<User> getUserHandler, IMapper mapper)
         {
-            var user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.UserId == request.UserId);
+            this.getUserHandler = getUserHandler;
+            this.mapper = mapper;
+        }
 
-            if (user == null)
-                throw new NotFoundException(nameof(User), request.UserId);
-
-            return user.Chats;
+        public async Task<IEnumerable<ChatVM>> Handle(GetChatsByUserIdQuery request, CancellationToken cancellationToken)
+        {
+            var user = await getUserHandler
+                .GetEntityByIdAsync(request.UserId, cancellationToken);
+            return mapper.Map<IEnumerable<ChatVM>>(user.Chats);
         }
     }
 }
