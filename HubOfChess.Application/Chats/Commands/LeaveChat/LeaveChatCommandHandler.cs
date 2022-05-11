@@ -1,29 +1,31 @@
 ﻿using MediatR;
 using HubOfChess.Application.Interfaces;
 using HubOfChess.Application.Common.Exceptions;
-using Microsoft.EntityFrameworkCore;
 using HubOfChess.Domain;
 
 namespace HubOfChess.Application.Chats.Commands.LeaveChat
 {
     public class LeaveChatCommandHandler : IRequestHandler<LeaveChatCommand, bool>
     {
-        private readonly IAppDbContext _dbContext;
+        private readonly IAppDbContext dbContext;
+        private readonly IGetEntityQueryHandler<User> getUserHandler;
+        private readonly IGetEntityQueryHandler<Chat> getChatHandler;
 
-        public LeaveChatCommandHandler(IAppDbContext dbContext) => 
-            _dbContext = dbContext;
+        public LeaveChatCommandHandler(
+            IAppDbContext dbContext, IGetEntityQueryHandler<User> getUserHandler, IGetEntityQueryHandler<Chat> getChatHandler)
+        {
+            this.dbContext = dbContext;
+            this.getUserHandler = getUserHandler;
+            this.getChatHandler = getChatHandler;
+        }
 
         public async Task<bool> Handle(LeaveChatCommand request, CancellationToken cancellationToken)
         {
-            var chat = await _dbContext.Chats
-                .FirstOrDefaultAsync(c => c.Id == request.ChatId, cancellationToken);
-            var user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.UserId == request.UserId, cancellationToken);
+            var chat = await getChatHandler
+                .GetEntityByIdAsync(request.ChatId, cancellationToken);
+            var user = await getUserHandler
+                .GetEntityByIdAsync(request.UserId, cancellationToken);
 
-            if (chat == null)
-                throw new NotFoundException(nameof(Chat), request.ChatId);
-            if (user == null)
-                throw new NotFoundException(nameof(User), request.UserId);
             if (!chat.Users.Contains(user))
                 throw new NoPermissionException(
                     nameof(User), user.UserId, nameof(Chat), chat.Id);
@@ -35,9 +37,9 @@ namespace HubOfChess.Application.Chats.Commands.LeaveChat
                 chat.Owner = chat.Users.FirstOrDefault(u => u.UserId != user.UserId);
 
             if (chat.Users.Count == 0)
-                _dbContext.Chats.Remove(chat);
+                dbContext.Chats.Remove(chat);
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
 
             return true;
         }
