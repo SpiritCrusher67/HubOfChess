@@ -18,7 +18,7 @@ namespace HubOfChess.Tests.PostComments.Queries
         {
             //Arrange
             var postId = AppDbContextFactory.PostA.Id;
-            var handler = new GetPostCommentsByPostIdQueryHandler(DbContext, Mapper);
+            var handler = new GetPostCommentsByPostIdQueryHandler(QueryHandler, Mapper);
             var expectedCommentsList = Mapper.Map<IEnumerable<PostCommentVM>>(new [] 
             { 
                 AppDbContextFactory.PostCommentA, 
@@ -40,7 +40,7 @@ namespace HubOfChess.Tests.PostComments.Queries
         {
             //Arrange
             var postId = AppDbContextFactory.PostB.Id;
-            var handler = new GetPostCommentsByPostIdQueryHandler(DbContext, Mapper);
+            var handler = new GetPostCommentsByPostIdQueryHandler(QueryHandler, Mapper);
 
             //Act
             var commentsList = await handler.Handle(
@@ -57,7 +57,7 @@ namespace HubOfChess.Tests.PostComments.Queries
         {
             //Arrange
             var postId = Guid.NewGuid();
-            var handler = new GetPostCommentsByPostIdQueryHandler(DbContext, Mapper);
+            var handler = new GetPostCommentsByPostIdQueryHandler(QueryHandler, Mapper);
 
             //Act
             //Assert
