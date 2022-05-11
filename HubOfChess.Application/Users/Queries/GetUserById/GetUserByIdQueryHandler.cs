@@ -1,29 +1,27 @@
 ﻿using AutoMapper;
-using HubOfChess.Application.Common.Exceptions;
 using HubOfChess.Application.Interfaces;
 using HubOfChess.Application.ViewModels;
 using HubOfChess.Domain;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace HubOfChess.Application.Users.Queries.GetUserById
 {
     public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, UserVM>
     {
-        private readonly IAppDbContext _dbContext;
-        private readonly IMapper _mapper;
+        private readonly IMapper mapper;
+        private readonly IGetEntityQueryHandler<User> getUserHandler;
 
-        public GetUserByIdQueryHandler(IAppDbContext dbContext, IMapper mapper) =>
-            (_dbContext, _mapper) = (dbContext, mapper);
+        public GetUserByIdQueryHandler(IGetEntityQueryHandler<User> getUserHandler, IMapper mapper)
+        {
+            this.getUserHandler = getUserHandler;
+            this.mapper = mapper;
+        }
 
         public async Task<UserVM> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.UserId == request.UserId, cancellationToken);
-            if (user == null)
-                throw new NotFoundException(nameof(User), request.UserId);
-
-            return _mapper.Map<UserVM>(user);
+            var user = await getUserHandler
+                .GetEntityByIdAsync(request.UserId, cancellationToken);
+            return mapper.Map<UserVM>(user);
         }
     }
 }

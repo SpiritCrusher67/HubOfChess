@@ -1,8 +1,10 @@
 ﻿using FluentAssertions;
+using HubOfChess.Application.Common.Exceptions;
 using HubOfChess.Application.Posts.Queries.GetPostsByUserId;
 using HubOfChess.Application.ViewModels;
 using HubOfChess.Domain;
 using HubOfChess.Tests.Common;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -76,6 +78,22 @@ namespace HubOfChess.Tests.Posts.Queries
 
             //Assert
             resultList.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task GetPostsByUserIdQuery_FailOnNotExistingUser()
+        {
+            //Arrange
+            var userId = Guid.NewGuid();
+            (var page, var limit) = (1, 3);
+            var handler = new GetPostsByUserIdQueryHandler(DbContext, Mapper);
+
+            //Act
+            //Assert
+            await Assert.ThrowsAsync<NotFoundException>( () => 
+                handler.Handle(
+                    new GetPostsByUserIdQuery(userId, page, limit),
+                    CancellationToken.None));
         }
     }
 }

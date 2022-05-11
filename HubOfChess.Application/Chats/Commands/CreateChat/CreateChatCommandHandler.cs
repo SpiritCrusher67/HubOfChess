@@ -1,24 +1,24 @@
 ﻿using HubOfChess.Domain;
 using HubOfChess.Application.Interfaces;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using HubOfChess.Application.Common.Exceptions;
 
 namespace HubOfChess.Application.Chats.Commands.CreateChat
 {
     public class CreateChatCommandHandler : IRequestHandler<CreateChatCommand, Guid>
     {
-        private readonly IAppDbContext _dbContext;
+        private readonly IAppDbContext dbContext;
+        private readonly IGetEntityQueryHandler<User> getUserHandler;
 
-        public CreateChatCommandHandler(IAppDbContext dbContext) => 
-            _dbContext = dbContext;
+        public CreateChatCommandHandler(IAppDbContext dbContext, IGetEntityQueryHandler<User> getUserHandler)
+        {
+            this.dbContext = dbContext;
+            this.getUserHandler = getUserHandler;
+        }
 
         public async Task<Guid> Handle(CreateChatCommand request, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.UserId == request.ChatOwner, cancellationToken);
-            if (user == null)
-                throw new NotFoundException(nameof(User), request.ChatOwner);
+            var user = await getUserHandler
+                .GetEntityByIdAsync(request.ChatOwnerUserId, cancellationToken);
 
             var chat = new Chat
             {
@@ -27,8 +27,8 @@ namespace HubOfChess.Application.Chats.Commands.CreateChat
                 Owner = user
             };
 
-            await _dbContext.Chats.AddAsync(chat,cancellationToken);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await dbContext.Chats.AddAsync(chat,cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
 
             return chat.Id;
         }

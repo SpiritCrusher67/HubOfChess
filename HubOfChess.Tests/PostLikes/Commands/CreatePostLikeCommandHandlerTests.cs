@@ -17,7 +17,7 @@ namespace HubOfChess.Tests.PostLikes.Commands
             //Arrange
             var userId = AppDbContextFactory.UserC.UserId;
             var postId = AppDbContextFactory.PostC.Id;
-            var handler = new CreatePostLikeCommandHandler(DbContext);
+            var handler = new CreatePostLikeCommandHandler(DbContext, QueryHandler, QueryHandler);
 
             //Act
             await handler.Handle(
@@ -38,7 +38,7 @@ namespace HubOfChess.Tests.PostLikes.Commands
             //Arrange
             var userId = AppDbContextFactory.UserB.UserId;
             var postId = AppDbContextFactory.PostA.Id;
-            var handler = new CreatePostLikeCommandHandler(DbContext);
+            var handler = new CreatePostLikeCommandHandler(DbContext, QueryHandler, QueryHandler);
 
             //Act
             //Assert

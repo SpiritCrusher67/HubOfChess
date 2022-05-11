@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using HubOfChess.Application.Chats.Commands.CreateChat;
 using HubOfChess.Application.Chats.Commands.DeleteChat;
@@ -16,8 +15,8 @@ namespace HubOfChess.Tests.Chats.Commands
         public async Task DeleteChatCommand_Success()
         {
             //Arrage
-            var createHandler = new CreateChatCommandHandler(DbContext);
-            var deleteHandler = new DeleteChatCommandHandler(DbContext);
+            var createHandler = new CreateChatCommandHandler(DbContext, QueryHandler);
+            var deleteHandler = new DeleteChatCommandHandler(DbContext, QueryHandler);
             var userId = AppDbContextFactory.UserA.UserId;
             var chatId = await createHandler.Handle(new CreateChatCommand(userId), CancellationToken.None);
 
@@ -31,28 +30,11 @@ namespace HubOfChess.Tests.Chats.Commands
         }
 
         [Fact]
-        public async Task DeleteChatCommand_FailOnWrongChatId()
-        {
-            //Arrage
-            var deleteHandler = new DeleteChatCommandHandler(DbContext);
-            var user = AppDbContextFactory.UserA;
-            var chatId = Guid.NewGuid();
-
-            //Act
-            //Assert
-            await Assert.ThrowsAsync<NotFoundException>(() =>
-             deleteHandler.Handle(
-                 new DeleteChatCommand(chatId, user.UserId),
-                 CancellationToken.None));
-
-        }
-
-        [Fact]
         public async Task DeleteChatCommand_FailOnWrongUser()
         {
             //Arrage
-            var createHandler = new CreateChatCommandHandler(DbContext);
-            var deleteHandler = new DeleteChatCommandHandler(DbContext);
+            var createHandler = new CreateChatCommandHandler(DbContext, QueryHandler);
+            var deleteHandler = new DeleteChatCommandHandler(DbContext, QueryHandler);
             var ownerUserId = AppDbContextFactory.UserA.UserId;
             var wrongUser = AppDbContextFactory.UserB;
             var chatId = await createHandler.Handle(new CreateChatCommand(ownerUserId), CancellationToken.None);

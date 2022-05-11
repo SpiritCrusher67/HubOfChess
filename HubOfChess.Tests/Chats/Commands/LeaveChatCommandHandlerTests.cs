@@ -5,7 +5,6 @@ using HubOfChess.Application.Common.Exceptions;
 using Xunit;
 using System.Threading;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace HubOfChess.Tests.Chats.Commands
 {
@@ -17,7 +16,7 @@ namespace HubOfChess.Tests.Chats.Commands
             //Arrange
             var userId = AppDbContextFactory.UserB.UserId;
             var chatId = AppDbContextFactory.ChatC.Id;
-            var handler = new LeaveChatCommandHandler(DbContext);
+            var handler = new LeaveChatCommandHandler(DbContext, QueryHandler, QueryHandler);
 
             //Act
             await handler.Handle(
@@ -37,7 +36,7 @@ namespace HubOfChess.Tests.Chats.Commands
             //Arrange
             var userId = AppDbContextFactory.UserA.UserId;
             var chatId = AppDbContextFactory.ChatC.Id;
-            var handler = new LeaveChatCommandHandler(DbContext);
+            var handler = new LeaveChatCommandHandler(DbContext, QueryHandler, QueryHandler);
 
             //Act
             await handler.Handle(
@@ -59,7 +58,7 @@ namespace HubOfChess.Tests.Chats.Commands
             //Arrange
             var userId = AppDbContextFactory.UserA.UserId;
             var chatId = AppDbContextFactory.ChatD.Id;
-            var handler = new LeaveChatCommandHandler(DbContext);
+            var handler = new LeaveChatCommandHandler(DbContext, QueryHandler, QueryHandler);
 
             //Act
             var result = await handler.Handle(
@@ -73,44 +72,12 @@ namespace HubOfChess.Tests.Chats.Commands
         }
 
         [Fact]
-        public async Task LeaveChatCommand_FailOnWrongChat()
-        {
-            //Arrange
-            var userId = AppDbContextFactory.UserA.UserId;
-            var chatId = Guid.NewGuid();
-            var handler = new LeaveChatCommandHandler(DbContext);
-
-            //Act
-            //Assert
-            await Assert.ThrowsAsync<NotFoundException>(() =>
-               handler.Handle(
-               new LeaveChatCommand(chatId, userId),
-               CancellationToken.None));
-        }
-
-        [Fact]
-        public async Task LeaveChatCommand_FailOnNotExistingUser()
-        {
-            //Arrange
-            var userId = Guid.NewGuid();
-            var chatId = AppDbContextFactory.ChatB.Id;
-            var handler = new LeaveChatCommandHandler(DbContext);
-
-            //Act
-            //Assert
-            await Assert.ThrowsAsync<NotFoundException>(() =>
-               handler.Handle(
-               new LeaveChatCommand(chatId, userId),
-               CancellationToken.None));
-        }
-
-        [Fact]
         public async Task LeaveChatCommand_FailOnWrongUser()
         {
             //Arrange
             var userId = AppDbContextFactory.UserB.UserId;
             var chatId = AppDbContextFactory.ChatB.Id;
-            var handler = new LeaveChatCommandHandler(DbContext);
+            var handler = new LeaveChatCommandHandler(DbContext, QueryHandler, QueryHandler);
 
             //Act
             //Assert

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using HubOfChess.Application.Common.Exceptions;
 using HubOfChess.Application.Messages.Commands.CreateMessage;
@@ -18,7 +17,7 @@ namespace HubOfChess.Tests.Messages.Commands
             var userId = AppDbContextFactory.UserA.UserId;
             var chatId = AppDbContextFactory.ChatA.Id;
             var text = "4AB4-8A69-381CD14A7421";
-            var handler = new CreateMessageCommandHandler(DbContext);
+            var handler = new CreateMessageCommandHandler(DbContext, QueryHandler, QueryHandler);
 
             //Act
             var msgId = await handler.Handle(
@@ -34,47 +33,13 @@ namespace HubOfChess.Tests.Messages.Commands
         }
 
         [Fact]
-        public async Task LeaveChatCommand_FailOnNotExistingChat()
-        {
-            //Arrange
-            var userId = AppDbContextFactory.UserA.UserId;
-            var chatId = Guid.NewGuid();
-            var text = "4AB4-8A69-381CD14A7421";
-            var handler = new CreateMessageCommandHandler(DbContext);
-
-            //Act
-            //Assert
-            await Assert.ThrowsAsync<NotFoundException>(() =>
-               handler.Handle(
-               new CreateMessageCommand(chatId, userId, text),
-               CancellationToken.None));
-        }
-
-        [Fact]
-        public async Task LeaveChatCommand_FailOnNotExistingUser()
-        {
-            //Arrange
-            var userId = Guid.NewGuid();
-            var chatId = AppDbContextFactory.ChatA.Id;
-            var text = "4AB4-8A69-381CD14A7421";
-            var handler = new CreateMessageCommandHandler(DbContext);
-
-            //Act
-            //Assert
-            await Assert.ThrowsAsync<NotFoundException>(() =>
-               handler.Handle(
-               new CreateMessageCommand(chatId, userId, text),
-               CancellationToken.None));
-        }
-
-        [Fact]
-        public async Task LeaveChatCommand_FailOnWrongUser()
+        public async Task CreateMessageCommand_FailOnWrongUser()
         {
             //Arrange
             var userId = AppDbContextFactory.UserC.UserId;
             var chatId = AppDbContextFactory.ChatA.Id;
             var text = "4AB4-8A69-381CD14A7421";
-            var handler = new CreateMessageCommandHandler(DbContext);
+            var handler = new CreateMessageCommandHandler(DbContext, QueryHandler, QueryHandler);
 
             //Act
             //Assert

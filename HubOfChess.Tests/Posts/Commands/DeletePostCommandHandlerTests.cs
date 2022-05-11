@@ -17,7 +17,7 @@ namespace HubOfChess.Tests.Posts.Commands
             //Arrange
             var userId = AppDbContextFactory.UserA.UserId;
             var postId = AppDbContextFactory.PostB.Id;
-            var handler = new DeletePostCommandHandler(DbContext);
+            var handler = new DeletePostCommandHandler(DbContext, QueryHandler, QueryHandler);
 
             //Act
             await handler.Handle(
@@ -36,7 +36,7 @@ namespace HubOfChess.Tests.Posts.Commands
             //Arrange
             var userId = AppDbContextFactory.UserA.UserId;
             var postId = AppDbContextFactory.PostA.Id;
-            var handler = new DeletePostCommandHandler(DbContext);
+            var handler = new DeletePostCommandHandler(DbContext, QueryHandler, QueryHandler);
 
             //Act
             await handler.Handle(
@@ -56,7 +56,7 @@ namespace HubOfChess.Tests.Posts.Commands
             //Arrange
             var userId = AppDbContextFactory.UserA.UserId;
             var postId = AppDbContextFactory.PostC.Id;
-            var handler = new DeletePostCommandHandler(DbContext);
+            var handler = new DeletePostCommandHandler(DbContext, QueryHandler, QueryHandler);
 
             //Act
             await handler.Handle(

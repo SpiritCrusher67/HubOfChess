@@ -4,29 +4,29 @@ using HubOfChess.Application.Interfaces;
 using HubOfChess.Application.ViewModels;
 using HubOfChess.Domain;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace HubOfChess.Application.Messages.Queries.GetMessagesByChatId
 {
     public class GetMessagesByChatIdQueryHandler : IRequestHandler<GetMessagesByChatIdQuery, IEnumerable<MessageVM>>
     {
-        private readonly IAppDbContext _dbContext;
-        private readonly IMapper _mapper;
+        private readonly IGetEntityQueryHandler<User> getUserHandler;
+        private readonly IGetEntityQueryHandler<Chat> getChatHandler;
+        private readonly IMapper mapper;
 
-        public GetMessagesByChatIdQueryHandler(IAppDbContext dbContext, IMapper mapper) =>
-            (_dbContext, _mapper) = (dbContext, mapper);
+        public GetMessagesByChatIdQueryHandler(IGetEntityQueryHandler<User> getUserHandler, IGetEntityQueryHandler<Chat> getChatHandler, IMapper mapper)
+        {
+            this.getUserHandler = getUserHandler;
+            this.getChatHandler = getChatHandler;
+            this.mapper = mapper;
+        }
 
         public async Task<IEnumerable<MessageVM>> Handle(GetMessagesByChatIdQuery request, CancellationToken cancellationToken)
         {
-            var chat = await _dbContext.Chats
-                .FirstOrDefaultAsync(c => c.Id == request.ChatId, cancellationToken);
-            var user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.UserId == request.UserId, cancellationToken);
+            var chat = await getChatHandler
+                .GetEntityByIdAsync(request.ChatId, cancellationToken);
+            var user = await getUserHandler
+                .GetEntityByIdAsync(request.UserId, cancellationToken);
 
-            if (chat == null)
-                throw new NotFoundException(nameof(Chat), request.ChatId);
-            if (user == null)
-                throw new NotFoundException(nameof(User), request.UserId);
             if (!chat.Users.Contains(user))
                 throw new NoPermissionException(
                     nameof(User), user.UserId, 
@@ -37,7 +37,7 @@ namespace HubOfChess.Application.Messages.Queries.GetMessagesByChatId
                 .Skip((request.Page - 1) * request.PageLimit )
                 .Take(request.PageLimit);
 
-            return _mapper.Map<IEnumerable<MessageVM>>(messages);
+            return mapper.Map<IEnumerable<MessageVM>>(messages);
         }
     }
 }

@@ -8,27 +8,28 @@ namespace HubOfChess.Application.PostLikes.Commands.CreatePostLike
 {
     public class CreatePostLikeCommandHandler : IRequestHandler<CreatePostLikeCommand>
     {
-        private readonly IAppDbContext _dbContext;
+        private readonly IAppDbContext dbContext;
+        private readonly IGetEntityQueryHandler<User> getUserHandler;
+        private readonly IGetEntityQueryHandler<Post> getPostHandler;
 
-        public CreatePostLikeCommandHandler(IAppDbContext dbContext) =>
-            _dbContext = dbContext;
+        public CreatePostLikeCommandHandler(IAppDbContext dbContext, 
+            IGetEntityQueryHandler<User> getUserHandler, IGetEntityQueryHandler<Post> getPostHandler)
+        {
+            this.dbContext = dbContext;
+            this.getUserHandler = getUserHandler;
+            this.getPostHandler = getPostHandler;
+        }
 
         public async Task<Unit> Handle(CreatePostLikeCommand request, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.UserId == request.UserId, cancellationToken);
-            var post = await _dbContext.Posts
-                .Include(p => p.Likes)
-                .FirstOrDefaultAsync(p => p.Id == request.PostId, cancellationToken);
+            var user = await getUserHandler
+                .GetEntityByIdAsync(request.UserId, cancellationToken);
+            var post = await getPostHandler
+                .GetEntityByIdAsync(request.PostId, cancellationToken);
 
-            if (user == null)
-                throw new NotFoundException(nameof(User), request.UserId);
-            if (post == null)
-                throw new NotFoundException(nameof(Post), request.PostId);
-            if (post.Likes
-                .FirstOrDefault(l => 
-                    l.UserId == user.UserId && 
-                    l.PostId == post.Id) != null)
+            if (await dbContext.PostLikes
+                .FirstOrDefaultAsync(l => l.UserId == request.UserId && 
+                l.PostId == request.PostId, cancellationToken) != null)
             {
                 throw new AlreadyExistException(
                     nameof(PostLike), 
@@ -43,8 +44,8 @@ namespace HubOfChess.Application.PostLikes.Commands.CreatePostLike
                 Date = DateTime.Now
             };
 
-            await _dbContext.PostLikes.AddAsync(like, cancellationToken);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await dbContext.PostLikes.AddAsync(like, cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;
         }

@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
-using System;
 
 namespace HubOfChess.Tests.Messages.Queries
 {
@@ -21,7 +20,9 @@ namespace HubOfChess.Tests.Messages.Queries
             var userId = AppDbContextFactory.UserA.UserId;
             var chatId = AppDbContextFactory.ChatA.Id;
             (var page, var limit) = (1, 3);
-            var handler = new GetMessagesByChatIdQueryHandler(DbContext,Mapper);
+
+            var handler = new GetMessagesByChatIdQueryHandler(QueryHandler, QueryHandler, Mapper);
+
             var expectedMsgList = Mapper.Map<IEnumerable<MessageVM>>(new List<Message>
             {
                 AppDbContextFactory.MessageE,
@@ -47,7 +48,8 @@ namespace HubOfChess.Tests.Messages.Queries
             var userId = AppDbContextFactory.UserA.UserId;
             var chatId = AppDbContextFactory.ChatA.Id;
             (var page, var limit) = (2, 3);
-            var handler = new GetMessagesByChatIdQueryHandler(DbContext, Mapper);
+            var handler = new GetMessagesByChatIdQueryHandler(QueryHandler, QueryHandler, Mapper);
+            
             var expectedMsgList = Mapper.Map<IEnumerable<MessageVM>>(new List<Message>
             {
                 AppDbContextFactory.MessageB,
@@ -72,7 +74,7 @@ namespace HubOfChess.Tests.Messages.Queries
             var userId = AppDbContextFactory.UserA.UserId;
             var chatId = AppDbContextFactory.ChatA.Id;
             (var page, var limit) = (5, 3);
-            var handler = new GetMessagesByChatIdQueryHandler(DbContext, Mapper);
+            var handler = new GetMessagesByChatIdQueryHandler(QueryHandler, QueryHandler, Mapper);
 
             //Act
             var resultList = await handler.Handle(
@@ -85,47 +87,13 @@ namespace HubOfChess.Tests.Messages.Queries
         }
 
         [Fact]
-        public async Task GetMessagesByChatIdQuery_FailOnNotExistingChat()
-        {
-            //Arrange
-            var userId = AppDbContextFactory.UserA.UserId;
-            var chatId = Guid.NewGuid();
-            (var page, var limit) = (1, 3);
-            var handler = new GetMessagesByChatIdQueryHandler(DbContext, Mapper);
-
-            //Act
-            //Assert
-            await Assert.ThrowsAsync<NotFoundException>( () =>
-                handler.Handle(
-                new GetMessagesByChatIdQuery(chatId, userId, page, limit),
-                CancellationToken.None));
-        }
-
-        [Fact]
-        public async Task GetMessagesByChatIdQuery_FailOnNotExistingUser()
-        {
-            //Arrange
-            var userId = Guid.NewGuid();
-            var chatId = AppDbContextFactory.ChatA.Id;
-            (var page, var limit) = (1, 3);
-            var handler = new GetMessagesByChatIdQueryHandler(DbContext, Mapper);
-
-            //Act
-            //Assert
-            await Assert.ThrowsAsync<NotFoundException>(() =>
-               handler.Handle(
-               new GetMessagesByChatIdQuery(chatId, userId, page, limit),
-               CancellationToken.None));
-        }
-
-        [Fact]
         public async Task GetMessagesByChatIdQuery_FailOnWrongUser()
         {
             //Arrange
             var userId = AppDbContextFactory.UserC.UserId;
             var chatId = AppDbContextFactory.ChatA.Id;
             (var page, var limit) = (1, 3);
-            var handler = new GetMessagesByChatIdQueryHandler(DbContext, Mapper);
+            var handler = new GetMessagesByChatIdQueryHandler(QueryHandler, QueryHandler, Mapper);
 
             //Act
             //Assert

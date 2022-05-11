@@ -5,7 +5,6 @@ using Xunit;
 using System.Threading;
 using Microsoft.EntityFrameworkCore;
 using HubOfChess.Application.Common.Exceptions;
-using System;
 
 namespace HubOfChess.Tests.Chats.Commands
 {
@@ -19,7 +18,7 @@ namespace HubOfChess.Tests.Chats.Commands
             var chatId = AppDbContextFactory.ChatA.Id;
             var ownerUserId = AppDbContextFactory.UserB.UserId;
             var chatName = "D7E1F0BD";
-            var handler = new UpdateChatCommandHandler(DbContext);
+            var handler = new UpdateChatCommandHandler(DbContext, QueryHandler, QueryHandler);
 
             //Act
             await handler.Handle(
@@ -34,13 +33,13 @@ namespace HubOfChess.Tests.Chats.Commands
         }
 
         [Fact]
-        public async Task UpdateChatCommand_FailOnWrongNewOwnerUser()
+        public async Task UpdateChatCommand_SuccessOnWrongNewOwner()
         {
             //Arrange
             var userId = AppDbContextFactory.UserC.UserId;
             var chatId = AppDbContextFactory.ChatB.Id;
             var ownerUserId = AppDbContextFactory.UserB.UserId;
-            var handler = new UpdateChatCommandHandler(DbContext);
+            var handler = new UpdateChatCommandHandler(DbContext, QueryHandler, QueryHandler);
 
             //Act
             await handler.Handle(
@@ -61,7 +60,7 @@ namespace HubOfChess.Tests.Chats.Commands
             var chatId = AppDbContextFactory.ChatA.Id;
             var ownerUserId = AppDbContextFactory.UserB.UserId;
             var chatName = "D7E1F0BD";
-            var handler = new UpdateChatCommandHandler(DbContext);
+            var handler = new UpdateChatCommandHandler(DbContext, QueryHandler, QueryHandler);
 
             //Act
             //Assert
@@ -69,42 +68,6 @@ namespace HubOfChess.Tests.Chats.Commands
                 handler.Handle(
                 new UpdateChatCommand(chatId, userId, ownerUserId, chatName),
                 CancellationToken.None));
-        }
-
-        [Fact]
-        public async Task UpdateChatCommand_FailOnNotExistingUser()
-        {
-            //Arrange
-            var userId = Guid.NewGuid();
-            var chatId = AppDbContextFactory.ChatA.Id;
-            var ownerUserId = AppDbContextFactory.UserB.UserId;
-            var chatName = "D7E1F0BD";
-            var handler = new UpdateChatCommandHandler(DbContext);
-
-            //Act
-            //Assert
-            await Assert.ThrowsAsync<NotFoundException>(() =>
-               handler.Handle(
-               new UpdateChatCommand(chatId, userId, ownerUserId, chatName),
-               CancellationToken.None));
-        }
-
-        [Fact]
-        public async Task UpdateChatCommand_FailOnNoExistingChat()
-        {
-            //Arrange
-            var userId = AppDbContextFactory.UserC.UserId;
-            var chatId = Guid.NewGuid();
-            var ownerUserId = AppDbContextFactory.UserB.UserId;
-            var chatName = "D7E1F0BD";
-            var handler = new UpdateChatCommandHandler(DbContext);
-
-            //Act
-            //Assert
-            await Assert.ThrowsAsync<NotFoundException>(() =>
-               handler.Handle(
-               new UpdateChatCommand(chatId, userId, ownerUserId, chatName),
-               CancellationToken.None));
         }
     }
 }

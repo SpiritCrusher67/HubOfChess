@@ -1,29 +1,29 @@
-﻿using HubOfChess.Application.Common.Exceptions;
-using HubOfChess.Application.Interfaces;
+﻿using HubOfChess.Application.Interfaces;
 using HubOfChess.Domain;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace HubOfChess.Application.PostComments.Commands.CreatePostComment
 {
     public class CreatePostCommentCommandHandler : IRequestHandler<CreatePostCommentCommand, Guid>
     {
-        private readonly IAppDbContext _dbContext;
+        private readonly IAppDbContext dbContext;
+        private readonly IGetEntityQueryHandler<User> getUserHandler;
+        private readonly IGetEntityQueryHandler<Post> getPostHandler;
 
-        public CreatePostCommentCommandHandler(IAppDbContext dbContext) =>
-            _dbContext = dbContext;
+        public CreatePostCommentCommandHandler(IAppDbContext dbContext, 
+            IGetEntityQueryHandler<User> getUserHandler, IGetEntityQueryHandler<Post> getPostHandler)
+        {
+            this.dbContext = dbContext;
+            this.getUserHandler = getUserHandler;
+            this.getPostHandler = getPostHandler;
+        }
 
         public async Task<Guid> Handle(CreatePostCommentCommand request, CancellationToken cancellationToken)
         {
-            var post = await _dbContext.Posts
-                .FirstOrDefaultAsync(p => p.Id == request.PostId, cancellationToken);
-            var user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.UserId == request.UserId, cancellationToken);
-
-            if (post == null)
-                throw new NotFoundException(nameof(Post), request.PostId);
-            if (user == null)
-                throw new NotFoundException(nameof(User), request.UserId);
+            var post = await getPostHandler
+                .GetEntityByIdAsync(request.PostId, cancellationToken);
+            var user = await getUserHandler
+                .GetEntityByIdAsync(request.UserId, cancellationToken);
 
             var comment = new PostComment
             {
@@ -34,8 +34,8 @@ namespace HubOfChess.Application.PostComments.Commands.CreatePostComment
                 Date = DateTime.Now
             };
 
-            await _dbContext.PostComments.AddAsync(comment, cancellationToken);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await dbContext.PostComments.AddAsync(comment, cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
 
             return comment.Id;
         }
