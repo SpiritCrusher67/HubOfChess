@@ -163,6 +163,55 @@ namespace HubOfChess.Tests.Common
             Date = DateTime.Now
         };
         #endregion
+
+        #region ChatInvites
+        public static readonly ChatInvite ChatInviteA = new()
+        {
+            Chat = ChatD,
+            SenderUser = UserA,
+            ChatId = ChatD.Id,
+            InvitedUser = UserB,
+            InvitedUserId = UserB.UserId,
+            Date = DateTime.Parse("10/02/2022 02:11:42")
+        };
+        public static readonly ChatInvite ChatInviteB = new()
+        {
+            Chat = ChatD,
+            SenderUser = UserA,
+            ChatId = ChatD.Id,
+            InvitedUser = UserC,
+            InvitedUserId = UserC.UserId,
+            Date = DateTime.Parse("10/02/2022 02:21:42")
+        };
+        public static readonly ChatInvite ChatInviteC = new()
+        {
+            Chat = ChatA,
+            SenderUser = UserA,
+            ChatId = ChatA.Id,
+            InvitedUser = UserC,
+            InvitedUserId = UserC.UserId,
+            Date = DateTime.Parse("10/02/2022 02:22:42")
+        };
+        #endregion
+
+        #region FriendInvites
+        public static readonly FriendInvite FriendInviteA = new()
+        {
+            SenderUser = UserA,
+            SenderUserId = UserA.UserId,
+            InvitedUser = UserB,
+            InvitedUserId = UserB.UserId,
+            Date = DateTime.Parse("10/02/2022 02:11:42")
+        };
+        public static readonly FriendInvite FriendInviteB = new()
+        {
+            SenderUser = UserC,
+            SenderUserId = UserC.UserId,
+            InvitedUser = UserB,
+            InvitedUserId = UserB.UserId,
+            Date = DateTime.Parse("12/02/2022 02:11:42")
+        };
+        #endregion
         public static AppDbContext Create()
         {
             var options = new DbContextOptionsBuilder<AppDbContext>()
@@ -180,6 +229,8 @@ namespace HubOfChess.Tests.Common
             context.PostLikes.AddRange(PostLikeA, PostLikeB, PostLikeC);
             context.PostComments.AddRange(
                 PostCommentA, PostCommentB, PostCommentC);
+            context.ChatInvites.AddRange(ChatInviteA, ChatInviteB, ChatInviteC);
+            context.FriendInvites.AddRange(FriendInviteA, FriendInviteB);
 
             context.SaveChanges();
             return context;
