@@ -2,23 +2,25 @@
 using HubOfChess.Application.Interfaces;
 using HubOfChess.Application.Common.Exceptions;
 using HubOfChess.Domain;
+using HubOfChess.Application.ViewModels;
+using AutoMapper;
 
 namespace HubOfChess.Application.Chats.Queries.GetChatById
 {
-    public class GetChatByIdQueryHandler : IRequestHandler<GetChatByIdQuery, Chat>
+    public class GetChatByIdQueryHandler : IRequestHandler<GetChatByIdQuery, ChatVM>
     {
-        private readonly IAppDbContext dbContext;
         private readonly IGetEntityQueryHandler<User> getUserHandler;
         private readonly IGetEntityQueryHandler<Chat> getChatHandler;
+        private readonly IMapper mapper;
 
-        public GetChatByIdQueryHandler(IAppDbContext dbContext, IGetEntityQueryHandler<User> getUserHandler, IGetEntityQueryHandler<Chat> getChatHandler)
+        public GetChatByIdQueryHandler(IGetEntityQueryHandler<User> getUserHandler, IGetEntityQueryHandler<Chat> getChatHandler, IMapper mapper)
         {
-            this.dbContext = dbContext;
             this.getUserHandler = getUserHandler;
             this.getChatHandler = getChatHandler;
+            this.mapper = mapper;
         }
 
-        public async Task<Chat> Handle(GetChatByIdQuery request, CancellationToken cancellationToken)
+        public async Task<ChatVM> Handle(GetChatByIdQuery request, CancellationToken cancellationToken)
         {
             var chat = await getChatHandler
                 .GetEntityByIdAsync(request.ChatId, cancellationToken);
@@ -30,7 +32,7 @@ namespace HubOfChess.Application.Chats.Queries.GetChatById
                     nameof(User),user.UserId, 
                     nameof(Chat), chat.Id);
 
-            return chat;
+            return mapper.Map<ChatVM>(chat);
         }
     }
 }

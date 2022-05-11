@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using FluentAssertions;
 using HubOfChess.Application.Chats.Queries.GetChatById;
 using HubOfChess.Application.Common.Exceptions;
 using HubOfChess.Tests.Common;
@@ -7,7 +8,7 @@ using Xunit;
 
 namespace HubOfChess.Tests.Chats.Queries
 {
-    public class GetChatByIdQueryHandlerTests : TestCommandBase
+    public class GetChatByIdQueryHandlerTests : TestQueryBase
     {
         [Fact]
         public async Task GetChatByIdQueryTest_Success()
@@ -15,7 +16,7 @@ namespace HubOfChess.Tests.Chats.Queries
             //Arrange
             var userId = AppDbContextFactory.UserA.UserId;
             var chatId = AppDbContextFactory.ChatA.Id;
-            var handler = new GetChatByIdQueryHandler(DbContext, QueryHandler, QueryHandler);
+            var handler = new GetChatByIdQueryHandler(QueryHandler, QueryHandler, Mapper);
 
             //Act
             var chat = await handler.Handle(
@@ -23,9 +24,9 @@ namespace HubOfChess.Tests.Chats.Queries
                 CancellationToken.None);
 
             //Assert
-            Assert.NotNull(chat);
-            Assert.Equal(chatId, chat.Id);
-            Assert.Equal(AppDbContextFactory.ChatA, chat);
+            chat.Should().NotBeNull();
+            chat.Id.Should().Be(chatId);
+            chat.Name.Should().Be(AppDbContextFactory.ChatA.Name);
         }
 
         [Fact]
@@ -34,7 +35,7 @@ namespace HubOfChess.Tests.Chats.Queries
             //Arrange
             var userId = AppDbContextFactory.UserC.UserId;
             var chatId = AppDbContextFactory.ChatA.Id;
-            var handler = new GetChatByIdQueryHandler(DbContext, QueryHandler, QueryHandler);
+            var handler = new GetChatByIdQueryHandler(QueryHandler, QueryHandler, Mapper);
 
             //Act
             //Assert
