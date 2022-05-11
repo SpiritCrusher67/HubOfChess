@@ -17,7 +17,7 @@ namespace HubOfChess.Tests.Posts.Queries
         {
             //Arrange
             var userId = AppDbContextFactory.UserA.UserId;
-            (var page, var limit) = (0, 3);
+            (var page, var limit) = (1, 3);
             var handler = new GetPostsByUserIdQueryHandler(DbContext, Mapper);
             var expectedList = Mapper.Map<IEnumerable<PostVM>>(new List<Post>
             {
@@ -42,7 +42,7 @@ namespace HubOfChess.Tests.Posts.Queries
         {
             //Arrange
             var userId = AppDbContextFactory.UserA.UserId;
-            (var page, var limit) = (1, 3);
+            (var page, var limit) = (2, 3);
             var handler = new GetPostsByUserIdQueryHandler(DbContext, Mapper);
             var expectedList = Mapper.Map<IEnumerable<PostVM>>(new List<Post>
             {
