@@ -17,7 +17,7 @@ namespace HubOfChess.Tests.PostComments.Commands
             var userId = AppDbContextFactory.UserA.UserId;
             var postId = AppDbContextFactory.PostC.Id;
             var text = "4FD8-A43F";
-            var handler = new CreatePostCommentCommandHandler(DbContext);
+            var handler = new CreatePostCommentCommandHandler(DbContext, QueryHandler, QueryHandler);
 
             //Act
             var commentId = await handler.Handle(
