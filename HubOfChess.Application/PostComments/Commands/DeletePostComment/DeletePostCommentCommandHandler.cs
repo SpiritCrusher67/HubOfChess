@@ -2,34 +2,37 @@
 using HubOfChess.Application.Interfaces;
 using HubOfChess.Domain;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace HubOfChess.Application.PostComments.Commands.DeletePostComment
 {
     public class DeletePostCommentCommandHandler : IRequestHandler<DeletePostCommentCommand>
     {
-        private readonly IAppDbContext _dbContext;
+        private readonly IAppDbContext dbContext;
+        private readonly IGetEntityQueryHandler<User> getUserHandler;
+        private readonly IGetEntityQueryHandler<PostComment> getCommentHandler;
 
-        public DeletePostCommentCommandHandler(IAppDbContext dbContext)=>
-            _dbContext = dbContext;
-        
+        public DeletePostCommentCommandHandler(IAppDbContext dbContext, IGetEntityQueryHandler<User> getUserHandler, IGetEntityQueryHandler<PostComment> getCommentHandler)
+        {
+            this.dbContext = dbContext;
+            this.getUserHandler = getUserHandler;
+            this.getCommentHandler = getCommentHandler;
+        }
+
         public async Task<Unit> Handle(DeletePostCommentCommand request, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.UserId == request.UserId, cancellationToken);
-            if (user == null)
-                throw new NotFoundException(nameof(User), request.UserId);
-            var comment = await _dbContext.PostComments
-                .FirstOrDefaultAsync(c => c.Id == request.CommentId, cancellationToken);
-            if (comment == null)
-                throw new NotFoundException(nameof(PostComment), request.CommentId);
+            var user = await getUserHandler
+                .GetEntityByIdAsync(request.UserId, cancellationToken);
+
+            var comment = await getCommentHandler
+                .GetEntityByIdAsync(request.CommentId, cancellationToken);
+
             if (comment.User != user)
                 throw new NoPermissionException(
                     nameof(User), user.UserId, 
                     nameof(PostComment), comment.Id);
 
-            _dbContext.PostComments.Remove(comment);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            dbContext.PostComments.Remove(comment);
+            await dbContext.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;
         }

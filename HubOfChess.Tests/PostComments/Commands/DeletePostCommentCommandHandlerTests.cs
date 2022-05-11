@@ -17,7 +17,7 @@ namespace HubOfChess.Tests.PostComments.Commands
             //Arrange
             var userId = AppDbContextFactory.UserA.UserId;
             var commentId = AppDbContextFactory.PostCommentC.Id;
-            var handler = new DeletePostCommentCommandHandler(DbContext);
+            var handler = new DeletePostCommentCommandHandler(DbContext, QueryHandler, QueryHandler);
 
             //Act
             await handler.Handle(
@@ -36,7 +36,7 @@ namespace HubOfChess.Tests.PostComments.Commands
             //Arrange
             var userId = AppDbContextFactory.UserA.UserId;
             var commentId = AppDbContextFactory.PostCommentA.Id;
-            var handler = new DeletePostCommentCommandHandler(DbContext);
+            var handler = new DeletePostCommentCommandHandler(DbContext, QueryHandler, QueryHandler);
 
             //Act
             //Assert
