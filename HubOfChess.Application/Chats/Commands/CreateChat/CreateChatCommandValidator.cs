@@ -6,7 +6,7 @@ namespace HubOfChess.Application.Chats.Commands.CreateChat
     {
         public CreateChatCommandValidator()
         {
-            RuleFor(cmd => cmd.ChatOwner).NotNull().NotEqual(Guid.Empty);
+            RuleFor(cmd => cmd.ChatOwnerUserId).NotNull().NotEqual(Guid.Empty);
             RuleFor(cmd => cmd.ChatName).MaximumLength(20);
         }
     }
