@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using HubOfChess.Application.Interfaces;
 using HubOfChess.Application.Common.Exceptions;
 using HubOfChess.Domain;
@@ -8,22 +7,23 @@ namespace HubOfChess.Application.Chats.Queries.GetChatById
 {
     public class GetChatByIdQueryHandler : IRequestHandler<GetChatByIdQuery, Chat>
     {
-        private readonly IAppDbContext _dbContext;
+        private readonly IAppDbContext dbContext;
+        private readonly IGetEntityQueryHandler<User> getUserHandler;
+        private readonly IGetEntityQueryHandler<Chat> getChatHandler;
 
-        public GetChatByIdQueryHandler(IAppDbContext dbContext) =>
-            _dbContext = dbContext;
+        public GetChatByIdQueryHandler(IAppDbContext dbContext, IGetEntityQueryHandler<User> getUserHandler, IGetEntityQueryHandler<Chat> getChatHandler)
+        {
+            this.dbContext = dbContext;
+            this.getUserHandler = getUserHandler;
+            this.getChatHandler = getChatHandler;
+        }
 
         public async Task<Chat> Handle(GetChatByIdQuery request, CancellationToken cancellationToken)
         {
-            var chat = await _dbContext.Chats
-                .FirstOrDefaultAsync(c => c.Id == request.ChatId, cancellationToken);
-            var user = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.UserId == request.UserId, cancellationToken);
-
-            if (chat == null)
-                throw new NotFoundException(nameof(Chat), request.ChatId);
-            if (user == null)
-                throw new NotFoundException(nameof(User), request.UserId);
+            var chat = await getChatHandler
+                .GetEntityByIdAsync(request.ChatId, cancellationToken);
+            var user = await getUserHandler
+                .GetEntityByIdAsync(request.UserId, cancellationToken);
 
             if (!chat.Users.Contains(user))
                 throw new NoPermissionException(
