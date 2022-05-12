@@ -14,6 +14,9 @@ namespace HubOfChess.Persistence
         public DbSet<PostLike> PostLikes { get; set; } = null!;
         public DbSet<PostComment> PostComments { get; set; } = null!;
         public DbSet<GameState> GameStates { get; set; } = null!;
+        public DbSet<ChatInvite> ChatInvites { get; set; } = null!;
+        public DbSet<FriendInvite> FriendInvites { get; set; } = null!;
+        public DbSet<UserFriend> Friends { get; set; } = null!;
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options) { }
@@ -28,6 +31,8 @@ namespace HubOfChess.Persistence
             modelBuilder.ApplyConfiguration(new PostLikeConfiguration());
             modelBuilder.ApplyConfiguration(new PostCommentConfiguration());
             modelBuilder.ApplyConfiguration(new GameStateConfiguration());
+            modelBuilder.ApplyConfiguration(new ChatInviteConfiguration());
+            modelBuilder.ApplyConfiguration(new FriendInviteConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
