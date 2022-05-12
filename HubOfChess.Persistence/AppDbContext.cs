@@ -16,6 +16,7 @@ namespace HubOfChess.Persistence
         public DbSet<GameState> GameStates { get; set; } = null!;
         public DbSet<ChatInvite> ChatInvites { get; set; } = null!;
         public DbSet<FriendInvite> FriendInvites { get; set; } = null!;
+        public DbSet<UserFriend> Friends { get; set; } = null!;
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options) { }

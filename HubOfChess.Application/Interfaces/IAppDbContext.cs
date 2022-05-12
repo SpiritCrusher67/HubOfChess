@@ -14,6 +14,7 @@ namespace HubOfChess.Application.Interfaces
         DbSet<GameState> GameStates { get; set; }
         DbSet<ChatInvite> ChatInvites { get; set; }
         DbSet<FriendInvite> FriendInvites { get; set; }
+        DbSet<UserFriend> Friends { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
