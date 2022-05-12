@@ -51,5 +51,22 @@ namespace HubOfChess.Tests.ChatInvites.Commands
                     new CreateChatInviteCommand(senderUserId, chatId, invitedUserId, inviteText),
                     CancellationToken.None));
         }
+
+        [Fact]
+        public async Task CreateChatInviteCommand_FailAlreadyExistChatInvite()
+        {
+            //Arrange
+            var chatId = AppDbContextFactory.ChatD.Id;
+            var senderUserId = AppDbContextFactory.UserA.UserId;
+            var invitedUserId = AppDbContextFactory.UserB.UserId;
+            var handler = new CreateChatInviteCommandHandler(DbContext, QueryHandler, QueryHandler);
+
+            //Act
+            //Assert
+            await Assert.ThrowsAsync<AlreadyExistException>(() =>
+                handler.Handle(
+                    new CreateChatInviteCommand(senderUserId, chatId, invitedUserId),
+                    CancellationToken.None));
+        }
     }
 }

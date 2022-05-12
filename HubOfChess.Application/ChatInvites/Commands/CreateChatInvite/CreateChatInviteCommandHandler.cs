@@ -2,6 +2,7 @@
 using HubOfChess.Application.Interfaces;
 using HubOfChess.Domain;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace HubOfChess.Application.ChatInvites.Commands.CreateChatInvite
 {
@@ -28,11 +29,21 @@ namespace HubOfChess.Application.ChatInvites.Commands.CreateChatInvite
                 .GetEntityByIdAsync(request.InvitedUserId, cancellationToken);
             var chat = await getChatHandler
                 .GetEntityByIdAsync(request.ChatId, cancellationToken);
+            
 
             if (senderUser != chat.Owner)
                 throw new NoPermissionException(
                     nameof(User), senderUser.UserId,
                     nameof(Chat), chat.Id);
+
+            if (await dbContext.ChatInvites
+                .FirstOrDefaultAsync(i => i.ChatId == request.ChatId && 
+                i.InvitedUserId == request.InvitedUserId) != null)
+            {
+                throw new AlreadyExistException(nameof(ChatInvite), 
+                    nameof(Chat), chat.Id, 
+                    nameof(User), invitedUser.UserId);
+            }
 
             var invite = new ChatInvite
             {
