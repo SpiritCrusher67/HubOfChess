@@ -2,7 +2,6 @@
 using HubOfChess.Application.Interfaces;
 using HubOfChess.Domain;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace HubOfChess.Application.FriendInvites.Commands.CreateFriendInvite
 {
@@ -19,18 +18,14 @@ namespace HubOfChess.Application.FriendInvites.Commands.CreateFriendInvite
 
         public async Task<Unit> Handle(CreateFriendInviteCommand request, CancellationToken cancellationToken)
         {
-            var senderUser = await dbContext.Users
-                .Include(u => u.Friends)
-                .Include(u => u.FriendInvites)
-                .FirstOrDefaultAsync(u => u.UserId == request.SenderUserId, cancellationToken);
+            var senderUser = await getUserHandler
+                .GetEntityByIdAsync(request.SenderUserId, cancellationToken);
             var invitedUser = await getUserHandler
                 .GetEntityByIdAsync(request.InvitedUserId, cancellationToken);
 
-            if (senderUser == null)
-                throw new NotFoundException(nameof(User), request.SenderUserId);
-
-            bool isFriend = senderUser.Friends
-                .FirstOrDefault(f => f.FriendId == invitedUser.UserId) != null;
+            bool isFriend = dbContext.Friends
+                .FirstOrDefault(f => f.UserId == senderUser.UserId &&
+                    f.FriendId == invitedUser.UserId) != null;
             bool isAlreadyInvited = senderUser.SendedFriendInvites
                 .FirstOrDefault(i => i.InvitedUserId == invitedUser.UserId) != null;
 
