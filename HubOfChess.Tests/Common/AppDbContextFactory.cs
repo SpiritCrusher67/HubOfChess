@@ -12,6 +12,7 @@ namespace HubOfChess.Tests.Common
         public static readonly User UserA = new() { UserId = Guid.NewGuid(), FirstName = "UserA", LastName = "A" };
         public static readonly User UserB = new() { UserId = Guid.NewGuid(), FirstName = "UserB", LastName = "B" };
         public static readonly User UserC = new() { UserId = Guid.NewGuid(), FirstName = "UserC", LastName = "C" };
+        public static readonly User UserD = new() { UserId = Guid.NewGuid(), FirstName = "UserD", LastName = "D" };
         #endregion
 
         #region Chats
@@ -220,7 +221,7 @@ namespace HubOfChess.Tests.Common
 
             var context = new AppDbContext(options);
             context.Database.EnsureCreated();
-            context.Users.AddRange(UserA, UserB, UserC);
+            context.Users.AddRange(UserA, UserB, UserC, UserD);
             context.Chats.AddRange(ChatA, ChatB, ChatC,ChatD);
             context.Messages.AddRange(
                 MessageA, MessageB, MessageC, MessageD, MessageE);
