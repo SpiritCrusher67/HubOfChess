@@ -6,4 +6,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HubOfChess.Application\HubOfChess.Application.csproj" />
+    <ProjectReference Include="..\HubOfChess.Persistence\HubOfChess.Persistence.csproj" />
+  </ItemGroup>
+
 </Project>
