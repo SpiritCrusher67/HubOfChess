@@ -2,6 +2,7 @@ using HubOfChess.Application;
 using HubOfChess.Application.Common.Mappings;
 using HubOfChess.Application.Interfaces;
 using HubOfChess.Persistence;
+using HubOfChess.WebApi.Middleware;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,10 +31,11 @@ using (var scope = app.Services.CreateScope())
     }
     catch (Exception ex)
     {
-        //TODO: use exception handler
+        //TODO: log exception
     }
 }
 
+app.UseCustomExceptionHandler();
 app.UseRouting();
 app.UseHttpsRedirection();
 app.UseCors();
