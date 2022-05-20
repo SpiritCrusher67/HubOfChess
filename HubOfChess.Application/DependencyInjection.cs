@@ -2,11 +2,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace HubOfChess.Persistence
+namespace HubOfChess.Application
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddPersistence(this IServiceCollection services)
+        public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddMediatR(Assembly.GetExecutingAssembly());
             return services;
