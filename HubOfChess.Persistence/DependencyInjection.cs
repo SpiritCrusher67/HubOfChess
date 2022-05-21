@@ -13,7 +13,7 @@ namespace HubOfChess.Persistence
             var connectionString = configuration["DbConnection"];
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlite();
+                options.UseSqlite(connectionString);
             });
 
             services.AddScoped<IAppDbContext>(provider => 
