@@ -169,7 +169,7 @@ namespace HubOfChess.WebApi.Controllers
         /// <response code="404">If chat with given id not found</response>
         /// <response code="451">If user is not member of this chat</response>
         [HttpPost]
-        [Route("leave/{id}")]
+        [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
