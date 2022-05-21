@@ -17,9 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubOfChess.Application", "H
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubOfChess.Persistence", "HubOfChess.Persistence\HubOfChess.Persistence.csproj", "{3B6D0FD9-8DCC-4834-B2AC-AFE1D6C206D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HubOfChess.WebApi", "HubOfChess.WebApi\HubOfChess.WebApi.csproj", "{6ABA91DA-3097-43BA-8C58-14D1A0D66BAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubOfChess.WebApi", "HubOfChess.WebApi\HubOfChess.WebApi.csproj", "{6ABA91DA-3097-43BA-8C58-14D1A0D66BAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HubOfChess.Tests", "HubOfChess.Tests\HubOfChess.Tests.csproj", "{F1EDA0C5-C5B6-4BB4-8D0B-905402E74F07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubOfChess.Tests", "HubOfChess.Tests\HubOfChess.Tests.csproj", "{F1EDA0C5-C5B6-4BB4-8D0B-905402E74F07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
