@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using HubOfChess.Application.PostComments.Commands.DeletePostComment;
+using HubOfChess.Application.PostComments.Queries.GetPostCommentById;
+using HubOfChess.Application.PostComments.Queries.GetPostCommentsByPostId;
 using HubOfChess.Application.PostLikes.Commands.CreatePostLike;
 using HubOfChess.Application.PostLikes.Commands.DeletePostLike;
 using HubOfChess.Application.PostLikes.Queries.GetPostLikesByPostId;
@@ -166,6 +169,109 @@ namespace HubOfChess.WebApi.Controllers
         public async Task<ActionResult> DeleteLike(Guid id)
         {
             var command = new DeletePostLikeCommand(UserId, id);
+
+            await Mediator.Send(command);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Gets the list of Post Comments by Post id
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// GET /post/414F0080-D5FE-42BD-9FC8-533F44E19048/comments
+        /// </remarks>
+        /// <returns>Returns List of PostCommentVM</returns>
+        /// <response code="200">Success</response>
+        /// <response code="401">If the user is unauthorized</response>
+        /// <response code="404">If post with given id not found</response>
+        [HttpGet("{id}/comments")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<PostCommentVM>>> GetAllComments(Guid id)
+        {
+            var query = new GetPostCommentsByPostIdQuery(id);
+
+            var postComments = await Mediator.Send(query);
+
+            return Ok(postComments);
+        }
+
+        /// <summary>
+        /// Gets the Post Comment by id
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// GET /post/comment/414F0080-D5FE-42BD-9FC8-533F44E19048
+        /// </remarks>
+        /// <returns>Returns PostCommentVM</returns>
+        /// <response code="200">Success</response>
+        /// <response code="401">If the user is unauthorized</response>
+        /// <response code="404">If comment with given id not found</response>
+        [HttpGet("comment/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<PostCommentVM>> GetComment(Guid id)
+        {
+            var query = new GetPostCommentByIdQuery(id);
+
+            var postComment = await Mediator.Send(query);
+
+            return Ok(postComment);
+        }
+
+        /// <summary>
+        /// Create Post Comment
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// POST /post/comment
+        /// {
+        ///     postId: "414F0080-D5FE-42BD-9FC8-533F44E19048",
+        ///     text: "Text...",
+        /// }
+        /// </remarks>
+        /// <returns>Returns id (Guid)</returns>
+        /// <response code="201">Success</response>
+        /// <response code="401">If the user is unauthorized</response>
+        /// <response code="404">If post with given id not found</response>
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<Guid>> CreateComment([FromBody] CreatePostCommentDto postCommentDto)
+        {
+            postCommentDto.SetUserId(UserId);
+            var command = mapper.Map<CreatePostCommand>(postCommentDto);
+
+            var commentId = await Mediator.Send(command);
+
+            return Ok(commentId);
+        }
+
+        /// <summary>
+        /// Deletes the Post Comment by id
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// DELETE /post/comment/414F0080-D5FE-42BD-9FC8-533F44E19048
+        /// </remarks>
+        /// <returns>Returns NoContent</returns>
+        /// <response code="204">Success</response>
+        /// <response code="401">If the user is unauthorized</response>
+        /// <response code="404">If like with given post id not found</response>
+        /// <response code="451">If user is not creator of this comment</response>
+        [HttpDelete("comment/{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status451UnavailableForLegalReasons)]
+        public async Task<ActionResult> DeleteComment(Guid id)
+        {
+            var command = new DeletePostCommentCommand(UserId, id);
 
             await Mediator.Send(command);
 
