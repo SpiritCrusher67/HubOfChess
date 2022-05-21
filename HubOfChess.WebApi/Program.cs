@@ -4,6 +4,8 @@ using HubOfChess.Application.Interfaces;
 using HubOfChess.Persistence;
 using HubOfChess.WebApi.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +34,42 @@ builder.Services.AddAuthentication(config =>
         options.RequireHttpsMetadata = false;
     });
 
+builder.Services.AddSwaggerGen(config =>
+{
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    config.IncludeXmlComments(xmlPath);
+
+    config.AddSecurityDefinition("Auth Token", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "bearer",
+        Name = "Authorization",
+        Description = "Authorization Token"
+    });
+    config.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "AuthToken"
+                }
+            },
+            new string[] {}
+        }
+
+    });
+    config.CustomOperationIds(apiDescription => 
+        apiDescription.TryGetMethodInfo(out MethodInfo info) 
+            ? info.Name 
+            : string.Empty);
+});
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -49,6 +87,8 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+app.UseSwagger();
+app.UseSwaggerUI();
 app.UseCustomExceptionHandler();
 app.UseRouting();
 app.UseHttpsRedirection();
