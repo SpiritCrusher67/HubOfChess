@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/HubOfChess.WebApi/HubOfChessDB.db
+/HubOfChess.WebApi/HubOfChessDB.db-shm
+/HubOfChess.WebApi/HubOfChessDB.db-wal
