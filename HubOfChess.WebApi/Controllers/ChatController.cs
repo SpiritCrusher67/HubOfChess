@@ -1,4 +1,8 @@
 ﻿using AutoMapper;
+using HubOfChess.Application.ChatInvites.Commands.AcceptChatInvite;
+using HubOfChess.Application.ChatInvites.Commands.CreateChatInvite;
+using HubOfChess.Application.ChatInvites.Commands.DeleteChatInvite;
+using HubOfChess.Application.ChatInvites.Queries.GetChatInvitesByChatId;
 using HubOfChess.Application.Chats.Commands.CreateChat;
 using HubOfChess.Application.Chats.Commands.DeleteChat;
 using HubOfChess.Application.Chats.Commands.LeaveChat;
@@ -177,6 +181,116 @@ namespace HubOfChess.WebApi.Controllers
         public async Task<ActionResult> Leave(Guid id)
         {
             var command = new LeaveChatCommand(id, UserId);
+
+            await Mediator.Send(command);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Gets the list of Chat Invites by Chat id
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// GET /chat/414F0080-D5FE-42BD-9FC8-533F44E19048/invites
+        /// </remarks>
+        /// <returns>Returns List of ChatInviteVM</returns>
+        /// <response code="200">Success</response>
+        /// <response code="401">If the user is unauthorized</response>
+        /// <response code="404">If chat with given id not found</response>
+        /// <response code="451">If user is not owner of this chat</response>
+        [HttpGet("{id}/invites")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status451UnavailableForLegalReasons)]
+        public async Task<ActionResult<IEnumerable<ChatInviteVM>>> GetAllInvites(Guid id)
+        {
+            var query = new GetChatInvitesByChatIdQuery(id, UserId);
+
+            var chatInvites = await Mediator.Send(query);
+
+            return Ok(chatInvites);
+        }
+
+        /// <summary>
+        /// Create Chat Invite
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// POST /chat/invite
+        /// {
+        ///     chatId: "414F0080-D5FE-42BD-9FC8-533F44E19048",
+        ///     invitedUserId: "86A8024D-B998-48D7-8793-B61AA9C15CA6",
+        ///     message: "Invite message"
+        /// }
+        /// </remarks>
+        /// <returns>Returns NoContent</returns>
+        /// <response code="201">Success</response>
+        /// <response code="401">If the user is unauthorized</response>
+        /// <response code="404">If chat/user with given id not found</response>
+        /// <response code="451">If user is not owner of this chat</response>
+        [HttpPost("invite")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status451UnavailableForLegalReasons)]
+        public async Task<ActionResult> CreateInvite([FromBody] CreateChatInviteDto createChatInviteDto)
+        {
+            createChatInviteDto.SetUserId(UserId);
+            var command = mapper.Map<CreateChatInviteCommand>(createChatInviteDto);
+
+            await Mediator.Send(command);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Deletes/decline the Chat Invite by Chat id.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// DELETE /chat/414F0080-D5FE-42BD-9FC8-533F44E19048/invite
+        /// </remarks>
+        /// <returns>Returns NoContent</returns>
+        /// <response code="204">Success</response>
+        /// <response code="401">If the user is unauthorized</response>
+        /// <response code="404">If chat with given id not found</response>
+        /// <response code="451">If user is not invited in this chat</response>
+        [HttpDelete("{id}/invite")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status451UnavailableForLegalReasons)]
+        public async Task<ActionResult> DeleteInvite(Guid chatId)
+        {
+            var command = new DeleteChatInviteCommand(chatId, UserId);
+
+            await Mediator.Send(command);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Accepts the Chat Invite by Chat id.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// PUT /chat/414F0080-D5FE-42BD-9FC8-533F44E19048/invite
+        /// </remarks>
+        /// <returns>Returns NoContent</returns>
+        /// <response code="204">Success</response>
+        /// <response code="401">If the user is unauthorized</response>
+        /// <response code="404">If chat with given id not found</response>
+        /// <response code="451">If user is not invited in this chat</response>
+        [HttpPut("{id}/invite")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status451UnavailableForLegalReasons)]
+        public async Task<ActionResult> AcceptInvite(Guid chatId)
+        {
+            var command = new AcceptChatInviteCommand(chatId, UserId);
 
             await Mediator.Send(command);
 
