@@ -38,7 +38,7 @@ namespace HubOfChess.WebApi.Controllers
         /// <returns>Returns List of PostVM</returns>
         /// <response code="200">Success</response>
         /// <response code="401">If the user is unauthorized</response>
-        [HttpGet("{page:int/pageLimit:int}")]
+        [HttpGet("{page:int}/{pageLimit:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<IEnumerable<PostVM>>> GetAllPosts(int page, int pageLimit)

@@ -34,7 +34,7 @@ namespace HubOfChess.WebApi.Controllers
         /// <response code="401">If the user is unauthorized</response>
         /// <response code="404">If chat with given id not found</response>
         /// <response code="451">If user is not member of given chat</response>
-        [HttpGet("{id/page:int/pageLimit:int}")]
+        [HttpGet("{id}/{page:int}/{pageLimit:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
